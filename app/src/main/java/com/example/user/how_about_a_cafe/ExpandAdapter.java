@@ -1,0 +1,141 @@
+package com.example.user.how_about_a_cafe;
+
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+
+public class ExpandAdapter extends BaseExpandableListAdapter {
+    FirebaseStorage storage = FirebaseStorage.getInstance("gs://how-about-a-cafe.appspot.com");
+    StorageReference storageRef = storage.getReference();
+    private Context context;
+    private int groupLayout = 0;
+    private int chlidLayout = 0;
+    private ArrayList<myGroup> DataList;
+    private LayoutInflater myinf = null;
+    private ViewHolder viewHolder;
+    private String data;
+
+    public ExpandAdapter(Context context, int groupLay, int chlidLay, ArrayList<myGroup> DataList) {
+        this.DataList = DataList;
+        this.groupLayout = groupLay;
+        this.chlidLayout = chlidLay;
+        this.context = context;
+        this.myinf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        Item item = new Item();
+        data = item.getCafe_name();
+    }
+
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        // TODO Auto-generated method stub
+
+        if (convertView == null) {
+            viewHolder = new ViewHolder();
+            convertView = myinf.inflate(this.groupLayout, parent, false);
+        }
+        TextView groupName = (TextView) convertView.findViewById(R.id.groupName);
+        groupName.setText(DataList.get(groupPosition).groupName);
+        viewHolder.iv_image = (ImageView) convertView.findViewById(R.id.hwa_down);
+        if (isExpanded) {
+            viewHolder.iv_image.setImageResource(R.drawable.hwa_up);
+        } else {
+            viewHolder.iv_image.setImageResource(R.drawable.hwa_down);
+        }
+        return convertView;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        // TODO Auto-generated method stub
+        if (convertView == null) {
+            convertView = myinf.inflate(this.chlidLayout, parent, false);
+        }
+        ImageView childImage = (ImageView) convertView.findViewById(R.id.childImage);
+        TextView childPrice = (TextView) convertView.findViewById(R.id.childPrice);
+        childPrice.setText(DataList.get(groupPosition).childPrice.get(childPosition));
+        TextView childName = (TextView) convertView.findViewById(R.id.childName);
+        childName.setText(DataList.get(groupPosition).child.get(childPosition));
+//        if (DataList.get(groupPosition).child.get(childPosition).equals(item.getCafe_name())) {
+//            Glide.with(context).load(storageRef.child(item.getCafe_name()+"/")).into(childImage);
+//        }
+
+
+        if (data != null) {
+            Log.d("cafename", data);
+        }
+        else {
+            Log.d("cafename", "null");
+        }
+
+        return convertView;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    public String getChild(int groupPosition, int childPosition) {
+        // TODO Auto-generated method stub
+        return DataList.get(groupPosition).child.get(childPosition);
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        // TODO Auto-generated method stub
+        return childPosition;
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        // TODO Auto-generated method stub
+        return DataList.get(groupPosition).child.size();
+    }
+
+    @Override
+    public myGroup getGroup(int groupPosition) {
+        // TODO Auto-generated method stub
+        return DataList.get(groupPosition);
+    }
+
+    @Override
+    public int getGroupCount() {
+        // TODO Auto-generated method stub
+        return DataList.size();
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        // TODO Auto-generated method stub
+        return groupPosition;
+    }
+
+    class ViewHolder {
+        public ImageView iv_image;
+    }
+}
