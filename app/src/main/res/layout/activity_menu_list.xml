@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background">
@@ -8,8 +8,18 @@
         android:id="@+id/expanded_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/line"
         android:childDivider="@drawable/line"
+        android:divider="@drawable/line"
         android:dividerHeight="1dp"
-        android:groupIndicator="@null"/>
-</LinearLayout>
+        android:groupIndicator="@null" />
+
+    <Button
+        android:id="@+id/cal_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_gravity="bottom"
+        android:textColor="#000000"
+        android:text="계산서"
+        android:textStyle="bold"
+        android:background="#d9d8d8"/>
+</FrameLayout>

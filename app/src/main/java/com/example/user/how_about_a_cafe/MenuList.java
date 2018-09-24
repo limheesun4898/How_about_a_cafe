@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -44,26 +45,34 @@ public class MenuList extends AppCompatActivity {
         final ArrayList<myGroup> DataList = new ArrayList<myGroup>();
         listView = (ExpandableListView) findViewById(R.id.expanded_menu);
 //        image = (ImageView) findViewById(R.id.childImage);
+        Button cal_btn = (Button) findViewById(R.id.cal_btn);
+
+        cal_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         firebaseDatabase.child(data).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                side = new myGroup("사이드 메뉴");
+                firebaseDatabase.child(data).child("사이드 메뉴").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        side = new myGroup("사이드 메뉴");
-                        firebaseDatabase.child(data).child("사이드 메뉴").addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                    side.child.add(snapshot.getKey());
-                                    side.childPrice.add(snapshot.getValue().toString() + "원");
-                                }
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            side.child.add(snapshot.getKey());
+                            side.childPrice.add(snapshot.getValue().toString() + "원");
+                        }
 
-                            }
+                    }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            }
-                        });
+                    }
+                });
                 firebaseDatabase.child(data).child("사이드메뉴").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -90,25 +99,29 @@ public class MenuList extends AppCompatActivity {
                             drink.child.add(snapshot.getKey());
                             drink.childPrice.add(snapshot.getValue().toString() + "원");
 
-                            if (snapshot.getKey().equals("SIZE")){
+                            if (snapshot.getKey().equals("SIZE")) {
                                 drink.child.remove("SIZE");
                                 drink.childPrice.remove(snapshot.getValue() + "원");
                             }
 
-                            if (snapshot.getKey().equals("SIZE2")){
+                            if (snapshot.getKey().equals("SIZE2")) {
                                 drink.child.remove("SIZE2");
                                 drink.childPrice.remove(snapshot.getValue() + "원");
                             }
 
 
-                            if (snapshot.getKey().equals("ICE")){
+                            if (snapshot.getKey().equals("ICE")) {
                                 drink.child.remove("ICE");
                                 drink.childPrice.remove(snapshot.getValue() + "원");
                             }
 
-
-                            if (snapshot.getKey().equals("ICE2")){
+                            if (snapshot.getKey().equals("ICE2")) {
                                 drink.child.remove("ICE2");
+                                drink.childPrice.remove(snapshot.getValue() + "원");
+                            }
+
+                            if (snapshot.getKey().equals("SIZE_CNT")) {
+                                drink.child.remove("SIZE_CNT");
                                 drink.childPrice.remove(snapshot.getValue() + "원");
                             }
 

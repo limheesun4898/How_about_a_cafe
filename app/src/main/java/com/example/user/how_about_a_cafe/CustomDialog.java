@@ -2,11 +2,14 @@ package com.example.user.how_about_a_cafe;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,10 +22,18 @@ import org.w3c.dom.Text;
 public class CustomDialog {
     public static DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
     private Context context;
-    private int psn_cnt = 1;
-    private String s_price;
     private int price;
-    private int mnu_cnt = 1;
+    private int total;
+    private int total_2;
+    private int ice = 0;
+    private boolean ice_cnt = false;
+    private int size = 0;
+    private int size_cnt = 1;
+    private int iMenu_cnt = 1;
+    private int iPerson_cnt = 1;
+    private int total_3;
+    private int SIZECNT = 0;
+
 
     public CustomDialog(Context context) {
         this.context = context;
@@ -51,8 +62,23 @@ public class CustomDialog {
         final Button menu_minus = (Button) dlg.findViewById(R.id.menu_on_click_menu_minus);
         final TextView menu_cnt = (TextView) dlg.findViewById(R.id.menu_on_click_menu_cnt);
         final Button menu_plus = (Button) dlg.findViewById(R.id.menu_on_click_menu_plus);
+        final Button hot_btn = (Button) dlg.findViewById(R.id.menu_on_click_hot);
+        final Button ice_btn = (Button) dlg.findViewById(R.id.menu_on_click_ice);
+        final Button size1 = (Button) dlg.findViewById(R.id.menu_on_click_size1);
+        final Button size2 = (Button) dlg.findViewById(R.id.menu_on_click_size2);
+        final Button size3 = (Button) dlg.findViewById(R.id.menu_on_click_size3);
 
         menu_name.setText(menu);
+        hot_btn.setEnabled(false);
+        size1.setEnabled(false);
+        if (iMenu_cnt == 1)
+            menu_minus.setEnabled(false);
+        else
+            menu_minus.setEnabled(true);
+        if (iPerson_cnt == 1)
+            person_minus.setEnabled(false);
+        else
+            person_minus.setEnabled(true);
 
         firebaseDatabase.child(cafe).addValueEventListener(new ValueEventListener() {
             @Override
@@ -61,9 +87,11 @@ public class CustomDialog {
                     firebaseDatabase.child(cafe).child("사이드메뉴").child(menu).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            s_price = dataSnapshot.getValue().toString();
+                            String s_price = dataSnapshot.getValue().toString();
                             menu_price.setText(s_price);
-//                            price = Integer.parseInt(s_price);
+                            price = Integer.parseInt(s_price);
+                            total = price;
+                            total_2 = price;
                         }
 
                         @Override
@@ -76,9 +104,11 @@ public class CustomDialog {
                     firebaseDatabase.child(cafe).child("음료").child(menu).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            s_price = dataSnapshot.getValue().toString();
+                            String s_price = dataSnapshot.getValue().toString();
                             menu_price.setText(s_price);
-//                            price = Integer.parseInt(s_price);
+                            price = Integer.parseInt(s_price);
+                            total = price;
+                            total_2 = price;
                         }
 
                         @Override
@@ -86,8 +116,65 @@ public class CustomDialog {
 
                         }
                     });
-
                 }
+
+                firebaseDatabase.child(cafe).child("음료").child("ICE").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() == null) {
+                            ice = 0;
+                        } else
+                            ice = Integer.parseInt(dataSnapshot.getValue().toString());
+
+                        if (ice == 0) {
+                            hot_btn.setBackgroundColor(Color.GRAY);
+                            ice_btn.setBackgroundColor(Color.GRAY);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                firebaseDatabase.child(cafe).child("음료").child("SIZE").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() == null)
+                            size = 0;
+                        else
+                            size = Integer.parseInt(dataSnapshot.getValue().toString());
+                        if (size == 0) {
+                            size1.setEnabled(false);
+                            size2.setEnabled(false);
+                            size3.setEnabled(false);
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                firebaseDatabase.child(cafe).child("음료").child("SIZE_CNT").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() == null)
+                            SIZECNT = 0;
+                        else
+                            SIZECNT = Integer.parseInt(dataSnapshot.getValue().toString());
+
+                        if (SIZECNT == 2) {
+                            size3.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
 
             }
@@ -98,55 +185,178 @@ public class CustomDialog {
             }
         });
 
+        hot_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hot_btn.setEnabled(false);
+                ice_btn.setEnabled(true);
+                ice_cnt = false;
+                menu_price.setText(String.valueOf(price));
+                total = Integer.parseInt(menu_price.getText().toString());
+                total_2 = Integer.parseInt(menu_price.getText().toString());
+                total_3 = Integer.parseInt(menu_price.getText().toString());
+            }
+        });
+
+        ice_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hot_btn.setEnabled(true);
+                ice_btn.setEnabled(false);
+                ice_cnt = true;
+                menu_price.setText(String.valueOf(price + ice));
+                total = Integer.parseInt(menu_price.getText().toString());
+                total_2 = Integer.parseInt(menu_price.getText().toString());
+                total_3 = Integer.parseInt(menu_price.getText().toString());
+            }
+        });
+
+        size1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                size1.setEnabled(false);
+                size2.setEnabled(true);
+                size3.setEnabled(true);
+                size_cnt = 1;
+
+                if (iMenu_cnt > 1) {
+                    iMenu_cnt = 1;
+                    menu_cnt.setText(String.valueOf(iMenu_cnt));
+                    menu_minus.setEnabled(false);
+                }
+
+                if (iPerson_cnt > 1) {
+                    iPerson_cnt = 1;
+                    person_cnt.setText(String.valueOf(iPerson_cnt) + " / N");
+                    person_minus.setEnabled(false);
+                }
+
+                if (ice_cnt)
+                    menu_price.setText(String.valueOf(price + ice));
+                else
+                    menu_price.setText(String.valueOf(price));
+
+                total = Integer.parseInt(menu_price.getText().toString());
+                total_2 = Integer.parseInt(menu_price.getText().toString());
+                total_3 = Integer.parseInt(menu_price.getText().toString());
+
+            }
+        });
+
+        size2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                size1.setEnabled(true);
+                size2.setEnabled(false);
+                size3.setEnabled(true);
+                size_cnt = 2;
+                if (iMenu_cnt > 1) {
+                    iMenu_cnt = 1;
+                    menu_cnt.setText(String.valueOf(iMenu_cnt));
+                    menu_minus.setEnabled(false);
+                }
+
+                if (iPerson_cnt > 1) {
+                    iPerson_cnt = 1;
+                    person_cnt.setText(String.valueOf(iPerson_cnt) + " / N");
+                    person_minus.setEnabled(false);
+                }
+
+                if (ice_cnt)
+                    menu_price.setText(String.valueOf(price + ice + size));
+                else
+                    menu_price.setText(String.valueOf(price + size));
+
+                total = Integer.parseInt(menu_price.getText().toString());
+                total_2 = Integer.parseInt(menu_price.getText().toString());
+                total_3 = Integer.parseInt(menu_price.getText().toString());
+            }
+        });
+
+        size3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                size1.setEnabled(true);
+                size2.setEnabled(true);
+                size3.setEnabled(false);
+                size_cnt = 3;
+                if (iMenu_cnt > 1) {
+                    iMenu_cnt = 1;
+                    menu_cnt.setText(String.valueOf(iMenu_cnt));
+                    menu_minus.setEnabled(false);
+                }
+
+                if (iPerson_cnt > 1) {
+                    iPerson_cnt = 1;
+                    person_cnt.setText(String.valueOf(iPerson_cnt) + " / N");
+                    person_minus.setEnabled(false);
+                }
+
+                if (ice_cnt)
+                    menu_price.setText(String.valueOf(price + ice + size * 2));
+                else
+                    menu_price.setText(String.valueOf(price + size * 2));
+
+                total = Integer.parseInt(menu_price.getText().toString());
+                total_2 = Integer.parseInt(menu_price.getText().toString());
+                total_3 = Integer.parseInt(menu_price.getText().toString());
+            }
+        });
+
         person_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                price = Integer.parseInt(menu_price.getText().toString());
-                menu_price.setText(String.valueOf(price * psn_cnt));
-                person_minus.setEnabled(true);
-                psn_cnt -= 1;
-//                price = price/psn_cnt;
-                person_cnt.setText(String.valueOf(psn_cnt) + " / N");
-                if (person_cnt.getText().equals("1 / N"))
+                iPerson_cnt -= 1;
+                if (iPerson_cnt == 1)
                     person_minus.setEnabled(false);
-
-
+                person_plus.setEnabled(true);
+                person_cnt.setText(String.valueOf(iPerson_cnt) + " / N");
+                menu_price.setText(String.valueOf(Math.round(total_2 / iPerson_cnt)));
+                total = Integer.parseInt(menu_price.getText().toString());
+                total_3 = Integer.parseInt(menu_price.getText().toString());
             }
         });
+
         person_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                price = Integer.parseInt(menu_price.getText().toString());
-                psn_cnt += 1;
-//                price = price/psn_cnt;
+                if (iPerson_cnt > 10)
+                    person_plus.setEnabled(false);
                 person_minus.setEnabled(true);
-                menu_price.setText(String.valueOf(price / psn_cnt));
-                person_cnt.setText(String.valueOf(psn_cnt) + " / N");
+                iPerson_cnt += 1;
+                person_cnt.setText(String.valueOf(iPerson_cnt) + " / N");
+                menu_price.setText(String.valueOf(Math.round(total_2 / iPerson_cnt)));
+                total = Integer.parseInt(menu_price.getText().toString());
+                total_3 = Integer.parseInt(menu_price.getText().toString());
             }
         });
+
         menu_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                price = Integer.parseInt(menu_price.getText().toString());
-                menu_price.setText(String.valueOf(price / mnu_cnt));
-                menu_minus.setEnabled(true);
-                mnu_cnt -= 1;
-//                price = price * mnu_cnt;
-                menu_cnt.setText(String.valueOf(mnu_cnt));
-                if (menu_cnt.getText().equals("1"))
+                iMenu_cnt -= 1;
+                if (iMenu_cnt == 1)
                     menu_minus.setEnabled(false);
-
+                menu_plus.setEnabled(true);
+                menu_cnt.setText(String.valueOf(iMenu_cnt));
+                menu_price.setText(String.valueOf(total * iMenu_cnt));
+                total_2 = Integer.parseInt(menu_price.getText().toString());
+                total_3 = Integer.parseInt(menu_price.getText().toString());
 
             }
         });
+
         menu_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                price = Integer.parseInt(menu_price.getText().toString());
+                iMenu_cnt += 1;
+                if (iMenu_cnt > 10)
+                    menu_plus.setEnabled(false);
                 menu_minus.setEnabled(true);
-                mnu_cnt += 1;
-                menu_cnt.setText(String.valueOf(mnu_cnt));
-                menu_price.setText(String.valueOf(price * mnu_cnt));
+                menu_cnt.setText(String.valueOf(iMenu_cnt));
+                menu_price.setText(String.valueOf(total * iMenu_cnt));
+                total_2 = Integer.parseInt(menu_price.getText().toString());
+                total_3 = Integer.parseInt(menu_price.getText().toString());
             }
         });
 
