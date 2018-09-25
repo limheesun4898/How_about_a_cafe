@@ -4,20 +4,16 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 public class CustomDialog {
     public static DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
@@ -67,6 +63,7 @@ public class CustomDialog {
         final Button size1 = (Button) dlg.findViewById(R.id.menu_on_click_size1);
         final Button size2 = (Button) dlg.findViewById(R.id.menu_on_click_size2);
         final Button size3 = (Button) dlg.findViewById(R.id.menu_on_click_size3);
+        final Button ok_btn = (Button) dlg.findViewById(R.id.menu_on_click_ok);
 
         menu_name.setText(menu);
         hot_btn.setEnabled(false);
@@ -87,11 +84,22 @@ public class CustomDialog {
                     firebaseDatabase.child(cafe).child("사이드메뉴").child(menu).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String s_price = dataSnapshot.getValue().toString();
-                            menu_price.setText(s_price);
-                            price = Integer.parseInt(s_price);
-                            total = price;
-                            total_2 = price;
+                            if (dataSnapshot.getValue() == null)
+                                return;
+                            else {
+                                String s_price = dataSnapshot.getValue().toString();
+                                menu_price.setText(s_price);
+                                price = Integer.parseInt(s_price);
+                                total = price;
+                                total_2 = price;
+                                total_3 = price;
+                                hot_btn.setVisibility(View.GONE);
+                                ice_btn.setVisibility(View.GONE);
+                                size1.setVisibility(View.GONE);
+                                size2.setVisibility(View.GONE);
+                                size3.setVisibility(View.GONE);
+                            }
+
                         }
 
                         @Override
@@ -99,6 +107,32 @@ public class CustomDialog {
 
                         }
                     });
+                    firebaseDatabase.child(cafe).child("사이드 메뉴").child(menu).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() == null)
+                                return;
+                            else {
+                                String s_price = dataSnapshot.getValue().toString();
+                                menu_price.setText(s_price);
+                                price = Integer.parseInt(s_price);
+                                total = price;
+                                total_2 = price;
+                                total_3 = price;
+                                hot_btn.setVisibility(View.GONE);
+                                ice_btn.setVisibility(View.GONE);
+                                size1.setVisibility(View.GONE);
+                                size2.setVisibility(View.GONE);
+                                size3.setVisibility(View.GONE);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
 
                 } else {
                     firebaseDatabase.child(cafe).child("음료").child(menu).addValueEventListener(new ValueEventListener() {
@@ -109,6 +143,7 @@ public class CustomDialog {
                             price = Integer.parseInt(s_price);
                             total = price;
                             total_2 = price;
+                            total_3 = price;
                         }
 
                         @Override
@@ -357,6 +392,15 @@ public class CustomDialog {
                 menu_price.setText(String.valueOf(total * iMenu_cnt));
                 total_2 = Integer.parseInt(menu_price.getText().toString());
                 total_3 = Integer.parseInt(menu_price.getText().toString());
+            }
+        });
+
+        ok_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Cal_Menu_Item item = new Cal_Menu_Item(menu, ice_cnt,String.valueOf(size_cnt), String.valueOf(total_3));
+                FirebaseDatabase.getInstance().getReference().child("user_menu").child(menu).setValue(item);
+                dlg.dismiss();
             }
         });
 

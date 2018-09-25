@@ -50,7 +50,8 @@ public class MenuList extends AppCompatActivity {
         cal_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Cal_Custom_Dialog cal_custom_dialog = new Cal_Custom_Dialog(MenuList.this);
+                cal_custom_dialog.callFunction();
             }
         });
 

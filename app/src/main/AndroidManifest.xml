@@ -55,8 +55,8 @@
         <activity android:name=".m_account" />
         <activity android:name=".Signup" />
         <activity android:name=".Google_map" />
-        <activity android:name=".MenuList"></activity>
-        <activity android:name=".MenuOnClick"></activity>
+        <activity android:name=".MenuList" />
+        <activity android:name=".CalCustomDialog"></activity>
     </application>
 
 </manifest>
