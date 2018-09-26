@@ -2,11 +2,13 @@ package com.example.user.how_about_a_cafe;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,9 +46,10 @@ public class Cal_Custom_Dialog {
         final ArrayList<Cal_List_Item> oData = new ArrayList<>();
 
         final TextView cal_total = (TextView) dlg.findViewById(R.id.cal_total);
-        final ImageView cal_image = (ImageView) dlg.findViewById(R.id.cal_image);
+        final ImageButton cal_image = (ImageButton) dlg.findViewById(R.id.cal_image);
+        final ImageButton cal_refresh = (ImageButton) dlg.findViewById(R.id.cal_refresh);
 
-        cal_image.setImageResource(R.drawable.cal_background);
+        cal_refresh.setImageResource(R.drawable.refresh_24dp);
 
         databaseReference.child("user_menu").addValueEventListener(new ValueEventListener() {
             @Override
@@ -78,6 +81,13 @@ public class Cal_Custom_Dialog {
                         Cal_List_Adapter cal_list_adapter = new Cal_List_Adapter(oData);
                         listView.setAdapter(cal_list_adapter);
                     }
+
+                    cal_refresh.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            databaseReference.child("user_menu").removeValue();
+                        }
+                    });
                 }
 
             }
