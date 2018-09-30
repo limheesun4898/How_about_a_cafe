@@ -58,11 +58,13 @@ public class Cal_List_Adapter extends BaseAdapter{
         TextView cal_temper = (TextView) convertView.findViewById(R.id.cal_temper);
         TextView cal_size = (TextView) convertView.findViewById(R.id.cal_size);
         TextView cal_price = (TextView) convertView.findViewById(R.id.cal_price);
+        TextView cal_cnt = (TextView) convertView.findViewById(R.id.cal_cnt);
 
         cal_menu.setText(m_oData.get(position).iMenu);
         cal_temper.setText(m_oData.get(position).iTemper);
         cal_size.setText(m_oData.get(position).iSize);
         cal_price.setText(m_oData.get(position).iPrice);
+        cal_cnt.setText(m_oData.get(position).iCnt);
         return convertView;
     }
 }

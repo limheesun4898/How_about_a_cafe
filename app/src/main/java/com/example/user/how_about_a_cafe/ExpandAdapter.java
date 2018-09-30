@@ -68,14 +68,11 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
             convertView = myinf.inflate(this.chlidLayout, parent, false);
         }
         ImageView childImage = (ImageView) convertView.findViewById(R.id.childImage);
+//        Glide.with(context).load()
         TextView childPrice = (TextView) convertView.findViewById(R.id.childPrice);
         childPrice.setText(DataList.get(groupPosition).childPrice.get(childPosition));
         TextView childName = (TextView) convertView.findViewById(R.id.childName);
         childName.setText(DataList.get(groupPosition).child.get(childPosition));
-//        if (DataList.get(groupPosition).child.get(childPosition).equals(item.getCafe_name())) {
-//            Glide.with(context).load(storageRef.child(item.getCafe_name()+"/")).into(childImage);
-//        }
-
 
         if (data != null) {
             Log.d("cafename", data);

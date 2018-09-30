@@ -9,19 +9,13 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
-        android:maxWidth="200dp"
-        android:maxHeight="200dp"
-        android:src="@drawable/account" />
-
-    <ImageButton
-        android:id="@+id/btn_UploaPicture"
-        android:layout_width="200sp"
-        android:layout_height="50sp"
-        android:layout_gravity="center"
-        android:src="@drawable/camera" />
+        android:maxWidth="100dp"
+        android:maxHeight="100dp"
+        android:src="@drawable/account"
+        android:onClick="iv_view"/>
 
     <LinearLayout
         android:layout_width="match_parent"

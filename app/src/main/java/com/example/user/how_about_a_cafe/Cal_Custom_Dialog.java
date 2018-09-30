@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,12 +28,14 @@ public class Cal_Custom_Dialog {
     private Context context;
     private ListView listView = null;
     private int total = 0;
+    private Cal_List_Item cal_item;
+    private Cal_List_Adapter cal_list_adapter;
 
     public Cal_Custom_Dialog(Context context) {
         this.context = context;
     }
 
-    public void callFunction() {
+    public void callFunction(final String cafe) {
 
         // 커스텀 다이얼로그를 정의하기위해 Dialog클래스를 생성한다.
         final Dialog dlg = new Dialog(context);
@@ -46,25 +49,31 @@ public class Cal_Custom_Dialog {
         final ArrayList<Cal_List_Item> oData = new ArrayList<>();
 
         final TextView cal_total = (TextView) dlg.findViewById(R.id.cal_total);
-        final ImageButton cal_image = (ImageButton) dlg.findViewById(R.id.cal_image);
         final ImageButton cal_refresh = (ImageButton) dlg.findViewById(R.id.cal_refresh);
+        final LinearLayout vis = (LinearLayout) dlg.findViewById(R.id.gone_layout);
+        final TextView non_menu_text = (TextView) dlg.findViewById(R.id.non_menu_text);
 
         cal_refresh.setImageResource(R.drawable.refresh_24dp);
 
-        databaseReference.child("user_menu").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("user_menu").child(cafe).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Cal_Menu_Item menu_item = dataSnapshot.getValue(Cal_Menu_Item.class);
                 if (menu_item == null) {
+                    vis.setVisibility(View.GONE);
+                    non_menu_text.setVisibility(View.VISIBLE);
                     return;
                 }
                 else {
+                    vis.setVisibility(View.VISIBLE);
+                    non_menu_text.setVisibility(View.GONE);
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Cal_List_Item cal_item = new Cal_List_Item();
+                        cal_item = new Cal_List_Item();
 
                         cal_item.iMenu = String.valueOf(snapshot.child("menu_name").getValue());
                         cal_item.iPrice = String.valueOf(snapshot.child("price").getValue());
                         cal_item.iSize = String.valueOf(snapshot.child("size").getValue());
+                        cal_item.iCnt = (String.valueOf(snapshot.child("cnt").getValue()));
 
                         total += Integer.parseInt(String.valueOf(snapshot.child("price").getValue()));
                         cal_total.setText(String.valueOf(total) + "원");
@@ -78,7 +87,7 @@ public class Cal_Custom_Dialog {
                         oData.add(cal_item);
 
                         listView = (ListView) dlg.findViewById(R.id.cal_listview);
-                        Cal_List_Adapter cal_list_adapter = new Cal_List_Adapter(oData);
+                        cal_list_adapter = new Cal_List_Adapter(oData);
                         listView.setAdapter(cal_list_adapter);
                     }
 
@@ -86,6 +95,9 @@ public class Cal_Custom_Dialog {
                         @Override
                         public void onClick(View view) {
                             databaseReference.child("user_menu").removeValue();
+                            oData.clear();
+                            cal_list_adapter = new Cal_List_Adapter(oData);
+                            listView.setAdapter(cal_list_adapter);
                         }
                     });
                 }

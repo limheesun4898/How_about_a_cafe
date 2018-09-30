@@ -3,9 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#BF7256</item>
-        <item name="colorPrimaryDark">#d68061</item>
+        <item name="colorPrimary">#34374C</item>
+        <item name="colorPrimaryDark">#34374C</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -13,14 +15,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="ThemeCustomCal">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
-        <item name="android:windowBackground">@drawable/cal_background</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
+    <style name="Noactionbar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#34374C</item>
+        <item name="colorPrimaryDark">#34374C</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

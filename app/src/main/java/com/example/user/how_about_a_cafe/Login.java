@@ -1,6 +1,7 @@
 package com.example.user.how_about_a_cafe;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.service.autofill.UserData;
 import android.support.annotation.NonNull;
@@ -76,7 +77,13 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("email", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("uid", user.getUid());
+                    editor.putString("email", user.getEmail());
+                    editor.apply();
                 } else {
+
                 }
             }
         };
@@ -142,9 +149,8 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                             email = user.getEmail();
                             photoUrl = user.getPhotoUrl().toString();
                             //DB에 데이터 저장
-                            User_Data userData = new User_Data(name, email, photoUrl);
+                            User_Data userData = new User_Data(name, email);
                             mDatabase.child("Google_User").child(name).setValue(userData);
-
                             startActivity(new Intent(Login.this, MainActivity.class));
                             finish();
                         }
@@ -167,7 +173,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                             name = user.getDisplayName();
                             photoUrl = user.getPhotoUrl().toString();
                             //DB에 데이터 저장
-                            User_Data userData = new User_Data(name, email, photoUrl);
+                            User_Data userData = new User_Data(name, email);
                             mDatabase.child("Facebook_User").child(name).setValue(userData);
 
                             startActivity(new Intent(Login.this, Signup.class));
@@ -204,6 +210,8 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                             } catch (Exception e) {
                             }
                         } else {
+
+
                             //로그인 성공
                             startActivity(new Intent(Login.this, MainActivity.class));
                             finish();

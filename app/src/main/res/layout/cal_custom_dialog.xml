@@ -1,63 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/cal_background">
+    android:layout_width="350sp"
+    android:layout_height="500sp"
+    android:layout_gravity="center">
 
-    <ImageButton
-        android:id="@+id/cal_image"
-        android:layout_width="500sp"
-        android:layout_height="570sp"
+    <View
+        android:layout_width="350sp"
+        android:layout_height="500sp" />
+
+    <TextView
+        android:id="@+id/non_menu_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@null"
-        android:src="@drawable/cal_background"/>
+        android:gravity="center"
+        android:text="메뉴가 없습니다.\n메뉴를 추가해주세요."
+        android:textColor="#000000" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="40sp"
+        android:layout_gravity="center"
+        android:layout_margin="20sp"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="12sp"
+            android:text="계산서"
+            android:textColor="#000000"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="50sp" />
+            android:layout_height="3dp"
+            android:layout_marginLeft="12sp"
+            android:layout_marginRight="12sp"
+            android:background="#000000" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12sp"
-            android:layout_marginLeft="12sp"
-            android:layout_marginRight="12sp"
+            android:layout_margin="12sp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="50sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="메뉴"
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="30sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="온도"
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="20sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="사이즈"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="20sp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="개수"
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="30sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="가격"
                 android:textColor="#000000"
                 android:textSize="16sp" />
@@ -75,48 +107,60 @@
             android:id="@+id/cal_listview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="12sp"
             android:layout_marginBottom="12sp"
-            android:layout_marginLeft="12sp"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
             android:layout_marginLeft="12sp"
-            android:layout_marginRight="12sp"
-            android:background="#000000" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8sp"
-            android:layout_marginLeft="12sp"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="16sp"
-                android:textColor="#000000"
-                android:text="총 금액 : "/>
-            <TextView
-                android:id="@+id/cal_total"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textSize="18sp"/>
-            <ImageButton
-                android:id="@+id/cal_refresh"
-                android:layout_width="20sp"
-                android:layout_height="20sp"
-                android:background="@null"
-                android:layout_marginLeft="8sp"/>
-
-        </LinearLayout>
+            android:layout_marginRight="12sp" />
 
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/gone_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="12sp"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#000000" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="12sp"
+            android:layout_marginTop="8sp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="center"
+                android:text="총 금액 : "
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/cal_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="60sp"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/cal_refresh"
+                android:layout_width="20sp"
+                android:layout_height="20sp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="12sp"
+                android:background="@null" />
+
+        </RelativeLayout>
+    </LinearLayout>
 </FrameLayout>

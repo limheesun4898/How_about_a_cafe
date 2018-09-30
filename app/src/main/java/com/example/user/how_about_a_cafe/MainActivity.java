@@ -1,10 +1,16 @@
 package com.example.user.how_about_a_cafe;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,12 +28,21 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.thekhaeng.recyclerviewmargin.LinearLayoutMargin;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -35,26 +50,16 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
-    private FirebaseAuth.AuthStateListener mAuthLiestener;
-
+    FirebaseUser user;
     private TextView Uname;
     private TextView Uemail;
     private CircleImageView Uiamge;
     Bitmap bitmap;
-
-    private GridView grid;
-    String[] web = {
-            "스타벅스", "이디야 커피", "요거프레소", "엔제리너스",
-            "투썸플레이스", "카페베네", "할리스",
-            "탐엔탐스", "공차", "빽다방", "카페게이트", "커피빈"
-    };
-    int[] imageId = {
-            R.drawable.starbucks, R.drawable.ediya, R.drawable.yogerpresso,
-            R.drawable.angelinus, R.drawable.twosome,
-            R.drawable.cafebene, R.drawable.hollys,
-            R.drawable.tomntoms, R.drawable.gongcha, R.drawable.bback, R.drawable.cafe_gate, R.drawable.coffeebean
-    };
+    Context mContext;
+    private List<ListItem> itemList = new ArrayList<>();
+    private MyRecyclerViewAdapter adapter;
+    DatabaseReference myRef;
+    final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,41 +67,30 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         setTitle("카페 어때?");
 
-        GridAdapter adapter = new GridAdapter(MainActivity.this, web, imageId);
-        grid = findViewById(R.id.gridview);
-        grid.setAdapter(adapter);
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Intent intent = new Intent(MainActivity.this, MenuList.class);
-                intent.putExtra("cafe_name", web[+position]);
-                startActivity(intent);
-
-            }
-        });
-
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        mAuthLiestener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-//                    UserAccount();
-                } else {
+        user = mFirebaseAuth.getCurrentUser();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("users");
 
-                }
-            }
-        };
+        mContext = getApplicationContext();
+
+        RecyclerView recyclerView = findViewById(R.id.main_recyclerview);
+        recyclerView.setHasFixedSize(true);
+        adapter = new MyRecyclerViewAdapter(itemList, this);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        LinearLayoutMargin layoutMargin = new LinearLayoutMargin(20);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(layoutMargin);
+        recyclerView.setAdapter(adapter);
+        addItem();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View view = navigationView.getHeaderView(0);
-        Uname = view.findViewById(R.id.Username);
-        Uemail = view.findViewById(R.id.Useremail);
-        Uiamge = view.findViewById(R.id.UserImage);
+        View v = navigationView.getHeaderView(0);
+        Uname = v.findViewById(R.id.Username);
+        Uemail = v.findViewById(R.id.Useremail);
+        Uiamge = v.findViewById(R.id.UserImage);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -109,55 +103,94 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void UserAccount() {
-        Thread mThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    URL url = null;
-                    url = new URL(mFirebaseAuth.getCurrentUser().getPhotoUrl().toString());
-                    if (url == null) {
-                        return;
-                    }
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setDoInput(true);
-                    conn.connect();
-
-                    InputStream is = conn.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(is);
-
-                } catch (MalformedURLException ee) {
-                    ee.printStackTrace();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        mThread.start();
-
-        try {
-            mThread.join();
-            Uiamge.setImageBitmap(bitmap);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Uname.setText(mFirebaseAuth.getCurrentUser().getDisplayName());
-        Uemail.setText(mFirebaseAuth.getCurrentUser().getEmail());
-
+    private void addItem() {
+        itemList.add(new ListItem(R.drawable.starbucks, "스타벅스", "http://www.istarbucks.co.kr/whats_new/campaign_list.do"));
+        itemList.add(new ListItem(R.drawable.ediya, "이디야 커피", "https://ediya.com/contents/event.html?tb_name=event"));
+        itemList.add(new ListItem(R.drawable.yogerpresso, "요거프레소", "https://www.yogerpresso.co.kr/event/new_plan"));
+        itemList.add(new ListItem(R.drawable.angelinus, "엔젤리너스", "http://www.angelinus.com/Event/Event_List.asp"));
+        itemList.add(new ListItem(R.drawable.twosome, "투썸플레이스", "https://www.twosome.co.kr:7009/event/list.asp"));
+        itemList.add(new ListItem(R.drawable.cafebene, "카페베네", "http://www.caffebene.co.kr/Content/Gnb/Community/Event.aspx?code=T3M1I1"));
+        itemList.add(new ListItem(R.drawable.hollys, "할리스 커피", "http://www.hollys.co.kr/news/notice/list.do"));
+        itemList.add(new ListItem(R.drawable.tomntoms, "탐엔탐스", "https://www.tomntoms.com/event/main.php"));
+        itemList.add(new ListItem(R.drawable.gongcha, "공차", "http://www.gong-cha.co.kr/brand/board/event.php"));
+        itemList.add(new ListItem(R.drawable.bback, "빽다방", "http://paikdabang.com/news/?cate=event"));
+        itemList.add(new ListItem(R.drawable.cafe_gate, "카페 게이트", "http://cafegate.co.kr"));
+        itemList.add(new ListItem(R.drawable.coffeebean, "커피빈", "http://www.coffeebeankorea.com/main/main.asp"));
+        adapter.notifyDataSetChanged();
     }
+
+//    private void UserAccount() {
+//        Thread mThread = new Thread() {
+//            @Override
+//            public void run() {
+//                try {
+//                    URL url = null;
+//                    url = new URL(mFirebaseAuth.getCurrentUser().getPhotoUrl().toString());
+//                    if (url == null) {
+//                        return;
+//                    }
+//                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                    conn.setDoInput(true);
+//                    conn.connect();
+//
+//                    InputStream is = conn.getInputStream();
+//                    bitmap = BitmapFactory.decodeStream(is);
+//
+//                } catch (MalformedURLException ee) {
+//                    ee.printStackTrace();
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        mThread.start();
+//
+//        try {
+//            mThread.join();
+//            Uiamge.setImageBitmap(bitmap);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        Uname.setText(mFirebaseAuth.getCurrentUser().getDisplayName());
+//        Uemail.setText(mFirebaseAuth.getCurrentUser().getEmail());
+//
+//    }
 
     //현재 사용자 확인
     @Override
     public void onStart() {
         super.onStart();
-        if (mFirebaseUser == null) {
-//            startActivity(new Intent(MainActivity.this, Login.class));
-//            finish();
+        if (user == null) {
+
         } else {
-//            UserAccount();
-            Uname.setText(mFirebaseAuth.getCurrentUser().getDisplayName());
-            Uemail.setText(mFirebaseAuth.getCurrentUser().getEmail());
+            //UserAccount();
+//            Uiamge.setImageURI(user.getPhotoUrl());
+//            Uname.setText(user.getDisplayName());
+//            Uemail.setText(user.getEmail());
+            Hashtable<String, String> profile = new Hashtable<String, String>();
+            profile.put("email", user.getEmail());
+            profile.put("photo", "");
+            myRef.child(user.getUid()).setValue(profile);
+
+            myRef.child("users").child(String.valueOf(Uname)).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String value = dataSnapshot.getValue().toString();
+                    String stphoto = dataSnapshot.child("photo").getValue().toString();
+                    if (TextUtils.isEmpty(stphoto)){
+                        Uiamge.setImageResource(R.drawable.account);
+                    }else{
+
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
@@ -182,6 +215,22 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.favorit_icon, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.favorite) {
+            startActivity(new Intent(getApplicationContext(), FavoriteList.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -189,7 +238,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = menuitem.getItemId();
         if (id == R.id.nav_account) {
-            startActivity(new Intent(this, m_account.class));
+            startActivity(new Intent(this, M_Account.class));
         } else if (id == R.id.nav_game) {
             Toast.makeText(this, "사다리게임", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_location) {

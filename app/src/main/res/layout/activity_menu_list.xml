@@ -1,25 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@drawable/background">
 
-    <ExpandableListView
-        android:id="@+id/expanded_menu"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/mytoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp">
+
+        <ImageButton
+            android:id="@+id/favorite_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/round"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:layout_width="15dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/cafe_name_tittle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="#ffffff"
+            android:text="카페이름"
+            android:textSize="20sp" />
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:childDivider="@drawable/line"
-        android:divider="@drawable/line"
-        android:dividerHeight="1dp"
-        android:groupIndicator="@null" />
+        android:orientation="vertical">
+        <ExpandableListView
+            android:id="@+id/expanded_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:childDivider="@drawable/line"
+            android:divider="@drawable/line"
+            android:dividerHeight="1dp"
+            android:groupIndicator="@null" />
 
-    <Button
-        android:id="@+id/cal_btn"
-        android:layout_width="match_parent"
-        android:layout_height="50sp"
-        android:layout_gravity="bottom"
-        android:textColor="#000000"
-        android:text="계산서"
-        android:textStyle="bold"
-        android:background="#d9d8d8"/>
-</FrameLayout>
+        <Button
+            android:id="@+id/cal_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:layout_gravity="bottom"
+            android:textColor="#000000"
+            android:text="계산서"
+            android:textStyle="bold"
+            android:background="#d9d8d8"/>
+    </FrameLayout>
+
+
+</LinearLayout>

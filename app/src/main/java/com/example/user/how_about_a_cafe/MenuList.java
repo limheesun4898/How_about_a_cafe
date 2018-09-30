@@ -1,18 +1,27 @@
 package com.example.user.how_about_a_cafe;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +34,11 @@ import java.util.ArrayList;
 
 public class MenuList extends AppCompatActivity {
     public static DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
+    private static final String PREFS_NAME = "FILE_PREFERENCES";
+    private static final String FAVORITES = "ITEM_FAVORITE";
+    private int img;
+    private ImageButton actionButton;
+    private TextView cafe_title;
     private ExpandableListView listView;
     private ImageView image;
     private String url;
@@ -32,6 +46,7 @@ public class MenuList extends AppCompatActivity {
     private myGroup drink;
     private boolean click = false;
     private String data;
+    private StorageReference mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://how-about-a-cafe.appspot.com");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +61,36 @@ public class MenuList extends AppCompatActivity {
         listView = (ExpandableListView) findViewById(R.id.expanded_menu);
 //        image = (ImageView) findViewById(R.id.childImage);
         Button cal_btn = (Button) findViewById(R.id.cal_btn);
+        img = intent.getIntExtra("img", 0);
+        actionButton = findViewById(R.id.favorite_button);
+
+        cafe_title = findViewById(R.id.cafe_name_tittle);
+        cafe_title.setText(data);
+
+        Toolbar mytoolbar = findViewById(R.id.mytoolbar);
+        setSupportActionBar(mytoolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        final String json = preferences.getString(FAVORITES, null);
+
+        if (json != null && json.contains(data)) {
+            actionButton.setImageResource(R.drawable.like);
+        } else actionButton.setImageResource(R.drawable.nolike);
+
+
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addFavo(json, actionButton, img, data, url);
+            }
+        });
 
         cal_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Cal_Custom_Dialog cal_custom_dialog = new Cal_Custom_Dialog(MenuList.this);
-                cal_custom_dialog.callFunction();
+                cal_custom_dialog.callFunction(data);
             }
         });
 
@@ -65,6 +104,19 @@ public class MenuList extends AppCompatActivity {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             side.child.add(snapshot.getKey());
                             side.childPrice.add(snapshot.getValue().toString() + "원");
+//                            mStorageRef.child(data + "/").child(snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                @Override
+//                                public void onSuccess(Uri uri) {
+//                                    Toast.makeText(MenuList.this, String.valueOf(uri), Toast.LENGTH_SHORT).show();
+//                                    Log.d("uri", String.valueOf(uri));
+//                                }
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception e) {
+//                                    Toast.makeText(MenuList.this, "실패쓰", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+
                         }
 
                     }
@@ -159,34 +211,54 @@ public class MenuList extends AppCompatActivity {
         });
     }
 
+
+    private void addFavo(String json, ImageButton actionButton, int img, String data, String url) {
+        ListItem item = new ListItem(img, data, url); // pasang objek yang mau ditambahin ke recyclerview
+
+        /* ngecek apakah itemnya udeh ada di favorit ape belum */
+        if (json != null && json.contains(data)) { // andaikata udah ada
+            actionButton.setImageResource(R.drawable.nolike);
+            Toast.makeText(getApplicationContext(), "즐겨찾기 취소", Toast.LENGTH_SHORT).show();
+            SharedPref sharedPref = new SharedPref();
+            int position = sharedPref.setIndex(getApplicationContext(), data);
+            sharedPref.removeFavorite(getApplicationContext(), position); // maka metodenya adalah remove item
+            sharedPref.removeIndex(getApplicationContext(), data); // nah ini remove string single nya buat acuan posisi
+
+        } else {
+            actionButton.setImageResource(R.drawable.like);
+            SharedPref sharedPref = new SharedPref();
+            sharedPref.addFavorite(getApplicationContext(), item); // ya tambahin deh
+            sharedPref.addIndex(getApplicationContext(), data);
+
+            Toast.makeText(getApplicationContext(), "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_list, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_list, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_list_event:
-                Toast.makeText(getApplicationContext(), "EVENT", Toast.LENGTH_LONG).show();
-                return true;
-
-            case R.id.menu_list_review:
-                Toast.makeText(getApplicationContext(), "REVIEW", Toast.LENGTH_LONG).show();
-                return true;
-
-            case R.id.menu_list_favorite:
-                Toast.makeText(getApplicationContext(), "favorite", Toast.LENGTH_LONG).show();
-                if (click) {
-                    item.setIcon(R.drawable.ic_favorite_border_black_24dp);
-                    click = false;
-                } else {
-                    item.setIcon(R.drawable.ic_favorite_black_24dp);
-                    click = true;
-                }
-                return true;
+            case R.id.evnet:
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
 
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("refresh", "true");
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
 }

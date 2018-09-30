@@ -2,21 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_list_event"
-        android:title="@null"
+    <item
+        android:id="@+id/evnet"
         android:icon="@drawable/event"
+        android:title="이벤트 알림 보기"
         app:showAsAction="always"/>
-
-    <item android:id="@+id/menu_list_review"
-        android:title="@null"
-        android:icon="@drawable/review"
-        app:showAsAction="always"/>
-
-    <item android:id="@+id/menu_list_favorite"
-        android:title="@null"
-        android:icon="@drawable/ic_favorite_border_black_24dp"
-        app:showAsAction="always"/>
-
-
 
 </menu>

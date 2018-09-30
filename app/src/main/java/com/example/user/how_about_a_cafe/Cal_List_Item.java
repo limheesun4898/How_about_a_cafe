@@ -5,4 +5,5 @@ public class Cal_List_Item {
     public String iTemper;
     public String iSize;
     public String iPrice;
+    public String iCnt;
 }

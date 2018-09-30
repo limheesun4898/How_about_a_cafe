@@ -5,18 +5,19 @@ public class Cal_Menu_Item {
     private boolean temper;
     private String size;
     private String price;
+    private String cnt;
 
     public Cal_Menu_Item() {
 
     }
 
-    public Cal_Menu_Item(String menu_name, boolean temper, String size, String price) {
+    public Cal_Menu_Item(String menu_name, boolean temper, String size, String price, String cnt) {
         this.menu_name = menu_name;
         this.temper = temper;
         this.size = size;
         this.price = price;
+        this.cnt = cnt;
     }
-
 
 
     public String getMenu_name() {
@@ -33,5 +34,9 @@ public class Cal_Menu_Item {
 
     public boolean getTemper() {
         return this.temper;
+    }
+
+    public String getCnt() {
+        return this.cnt;
     }
 }

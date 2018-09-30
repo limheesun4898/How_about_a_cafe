@@ -12,7 +12,6 @@ public class myGroup {
     public ArrayList<String> childPrice;
     public ArrayList<ImageView> childImage;
     public String groupName;
-    private String cafe_name;
     myGroup(String name){
         groupName = name;
         child = new ArrayList<String>();

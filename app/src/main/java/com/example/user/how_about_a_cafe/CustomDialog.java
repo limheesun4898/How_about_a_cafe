@@ -398,8 +398,8 @@ public class CustomDialog {
         ok_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Cal_Menu_Item item = new Cal_Menu_Item(menu, ice_cnt,String.valueOf(size_cnt), String.valueOf(total_3));
-                FirebaseDatabase.getInstance().getReference().child("user_menu").child(menu).setValue(item);
+                Cal_Menu_Item item = new Cal_Menu_Item(menu, ice_cnt,String.valueOf(size_cnt), String.valueOf(total_3), String.valueOf(iPerson_cnt));
+                FirebaseDatabase.getInstance().getReference().child("user_menu").child(cafe).child(menu).setValue(item);
                 dlg.dismiss();
             }
         });
