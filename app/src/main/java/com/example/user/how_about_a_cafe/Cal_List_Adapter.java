@@ -51,7 +51,7 @@ public class Cal_List_Adapter extends BaseAdapter{
             {
                 inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             }
-            convertView = inflater.inflate(R.layout.cal_custom_listview, parent, false);
+            convertView = inflater.inflate(R.layout.menu_cal_listview, parent, false);
         }
 
         TextView cal_menu = (TextView) convertView.findViewById(R.id.cal_menu);

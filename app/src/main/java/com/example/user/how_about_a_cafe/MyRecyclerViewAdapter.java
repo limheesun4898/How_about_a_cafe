@@ -38,7 +38,7 @@ class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.V
     @Override
     public MyRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         int width = parent.getResources().getDisplayMetrics().widthPixels / 2;
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recyclerview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_main_recyclerview, parent, false);
         view.setLayoutParams(new LinearLayout.LayoutParams(width, width));
         MyRecyclerViewAdapter.ViewHolder holder = new ViewHolder(view);
         return holder;

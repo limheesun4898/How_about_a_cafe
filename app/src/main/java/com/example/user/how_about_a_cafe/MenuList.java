@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -75,8 +74,8 @@ public class MenuList extends AppCompatActivity {
         final String json = preferences.getString(FAVORITES, null);
 
         if (json != null && json.contains(data)) {
-            actionButton.setImageResource(R.drawable.like);
-        } else actionButton.setImageResource(R.drawable.nolike);
+            actionButton.setImageResource(R.drawable.ic_favorite_black_24dp);
+        } else actionButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
 
 
         actionButton.setOnClickListener(new View.OnClickListener() {
@@ -104,18 +103,18 @@ public class MenuList extends AppCompatActivity {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             side.child.add(snapshot.getKey());
                             side.childPrice.add(snapshot.getValue().toString() + "원");
-//                            mStorageRef.child(data + "/").child(snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                @Override
-//                                public void onSuccess(Uri uri) {
+                            mStorageRef.child(data + "/").child(snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
 //                                    Toast.makeText(MenuList.this, String.valueOf(uri), Toast.LENGTH_SHORT).show();
-//                                    Log.d("uri", String.valueOf(uri));
-//                                }
-//                            }).addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    Toast.makeText(MenuList.this, "실패쓰", Toast.LENGTH_SHORT).show();
-//                                }
-//                            });
+                                    Log.d("uri", String.valueOf(uri));
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(MenuList.this, "실패쓰", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
                         }
 
@@ -189,7 +188,7 @@ public class MenuList extends AppCompatActivity {
                 });
                 DataList.add(drink);
 
-                ExpandAdapter adapter = new ExpandAdapter(getApplicationContext(), R.layout.group_row, R.layout.child_row, DataList);
+                ExpandAdapter adapter = new ExpandAdapter(getApplicationContext(), R.layout.activity_menu_list_group_row, R.layout.activity_menu_list_child_row, DataList);
                 adapter.notifyDataSetChanged();
                 listView.setAdapter(adapter);
 
@@ -217,7 +216,7 @@ public class MenuList extends AppCompatActivity {
 
         /* ngecek apakah itemnya udeh ada di favorit ape belum */
         if (json != null && json.contains(data)) { // andaikata udah ada
-            actionButton.setImageResource(R.drawable.nolike);
+            actionButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
             Toast.makeText(getApplicationContext(), "즐겨찾기 취소", Toast.LENGTH_SHORT).show();
             SharedPref sharedPref = new SharedPref();
             int position = sharedPref.setIndex(getApplicationContext(), data);
@@ -225,7 +224,7 @@ public class MenuList extends AppCompatActivity {
             sharedPref.removeIndex(getApplicationContext(), data); // nah ini remove string single nya buat acuan posisi
 
         } else {
-            actionButton.setImageResource(R.drawable.like);
+            actionButton.setImageResource(R.drawable.ic_favorite_black_24dp);
             SharedPref sharedPref = new SharedPref();
             sharedPref.addFavorite(getApplicationContext(), item); // ya tambahin deh
             sharedPref.addIndex(getApplicationContext(), data);

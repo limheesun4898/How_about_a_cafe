@@ -2,14 +2,11 @@ package com.example.user.how_about_a_cafe;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,7 +40,7 @@ public class Cal_Custom_Dialog {
         // 액티비티의 타이틀바를 숨긴다.
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
         // 커스텀 다이얼로그의 레이아웃을 설정한다.
-        dlg.setContentView(R.layout.cal_custom_dialog);
+        dlg.setContentView(R.layout.menu_cal_dialog);
         // 커스텀 다이얼로그를 노출한다.
         dlg.show();
         final ArrayList<Cal_List_Item> oData = new ArrayList<>();

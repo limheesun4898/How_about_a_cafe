@@ -44,7 +44,7 @@ public class CustomDialog {
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // 커스텀 다이얼로그의 레이아웃을 설정한다.
-        dlg.setContentView(R.layout.custom_dialog);
+        dlg.setContentView(R.layout.menu_option_dialog);
 
         // 커스텀 다이얼로그를 노출한다.
         dlg.show();
