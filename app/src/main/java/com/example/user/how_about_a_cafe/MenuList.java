@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -45,7 +46,8 @@ public class MenuList extends AppCompatActivity {
     private myGroup drink;
     private boolean click = false;
     private String data;
-    private StorageReference mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://how-about-a-cafe.appspot.com");
+    private FirebaseStorage mm = FirebaseStorage.getInstance();
+    private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +56,14 @@ public class MenuList extends AppCompatActivity {
 
         Intent intent = getIntent();
         Item item = new Item(intent.getStringExtra("cafe_name"));
+        url = intent.getStringExtra("url");
+        img = intent.getIntExtra("img", 0);
         data = item.getCafe_name();
 
         final ArrayList<myGroup> DataList = new ArrayList<myGroup>();
         listView = (ExpandableListView) findViewById(R.id.expanded_menu);
-//        image = (ImageView) findViewById(R.id.childImage);
+        image = (ImageView) findViewById(R.id.childImage);
         Button cal_btn = (Button) findViewById(R.id.cal_btn);
-        img = intent.getIntExtra("img", 0);
         actionButton = findViewById(R.id.favorite_button);
 
         cafe_title = findViewById(R.id.cafe_name_tittle);
@@ -72,6 +75,20 @@ public class MenuList extends AppCompatActivity {
 
         SharedPreferences preferences = getApplicationContext().getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         final String json = preferences.getString(FAVORITES, null);
+
+//        mStorageRef.child(data + "/").child("사이드 메뉴/").child("녹차라떼.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                Toast.makeText(MenuList.this, String.valueOf(uri), Toast.LENGTH_SHORT).show();
+////                Log.d("uri", String.valueOf(uri));
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(MenuList.this, "실패쓰", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
 
         if (json != null && json.contains(data)) {
             actionButton.setImageResource(R.drawable.ic_favorite_black_24dp);
@@ -103,18 +120,22 @@ public class MenuList extends AppCompatActivity {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             side.child.add(snapshot.getKey());
                             side.childPrice.add(snapshot.getValue().toString() + "원");
-                            mStorageRef.child(data + "/").child(snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-//                                    Toast.makeText(MenuList.this, String.valueOf(uri), Toast.LENGTH_SHORT).show();
-                                    Log.d("uri", String.valueOf(uri));
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(MenuList.this, "실패쓰", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+//                            mStorageRef.child(data + "/").child("사이드 메뉴/").child(snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                @Override
+//                                public void onSuccess(Uri uri) {
+//                                    Glide.with(MenuList.this).load(uri).into(image);
+//                                    side.childImage.add(uri);
+//                                }
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception e) {
+//                                    Toast.makeText(MenuList.this, "실패쓰", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+
+//                            mStorageRef = mStorageRef.child(data + "/").child("사이드 메뉴/").child(snapshot.getKey() + ".png");
+//                            Glide.with(MenuList.this).load(mStorageRef).into(image);
+//                            Log.d("mStorageRef", String.valueOf(mStorageRef));
 
                         }
 
@@ -131,6 +152,10 @@ public class MenuList extends AppCompatActivity {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             side.child.add(snapshot.getKey());
                             side.childPrice.add(snapshot.getValue().toString() + "원");
+
+//                            mStorageRef = mm.getReference(data + "/사이드 메뉴/오리지날번.png");
+//                            Glide.with(MenuList.this).load(mStorageRef).into(image);
+//                            Log.d("mStorageRef", String.valueOf(mStorageRef));
                         }
 
                     }
@@ -246,6 +271,11 @@ public class MenuList extends AppCompatActivity {
             case R.id.evnet:
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
+
+            case R.id.review_btn:
+                Intent intent1 = new Intent(MenuList.this, ListReview.class);
+                intent1.putExtra("cafe_name", data);
+                startActivity(intent1);
 
         }
         return super.onOptionsItemSelected(item);

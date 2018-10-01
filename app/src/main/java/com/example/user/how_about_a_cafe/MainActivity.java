@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         itemList.add(new ListItem(R.drawable.starbucks, "스타벅스", "http://www.istarbucks.co.kr/whats_new/campaign_list.do"));
         itemList.add(new ListItem(R.drawable.ediya, "이디야 커피", "https://ediya.com/contents/event.html?tb_name=event"));
         itemList.add(new ListItem(R.drawable.yogerpresso, "요거프레소", "https://www.yogerpresso.co.kr/event/new_plan"));
-        itemList.add(new ListItem(R.drawable.angelinus, "엔젤리너스", "http://www.angelinus.com/Event/Event_List.asp"));
+        itemList.add(new ListItem(R.drawable.angelinus, "엔제리너스", "http://www.angelinus.com/Event/Event_List.asp"));
         itemList.add(new ListItem(R.drawable.twosome, "투썸플레이스", "https://www.twosome.co.kr:7009/event/list.asp"));
         itemList.add(new ListItem(R.drawable.cafebene, "카페베네", "http://www.caffebene.co.kr/Content/Gnb/Community/Event.aspx?code=T3M1I1"));
         itemList.add(new ListItem(R.drawable.hollys, "할리스 커피", "http://www.hollys.co.kr/news/notice/list.do"));

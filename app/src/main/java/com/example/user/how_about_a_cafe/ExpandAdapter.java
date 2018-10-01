@@ -2,6 +2,7 @@ package com.example.user.how_about_a_cafe;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,15 +23,14 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 public class ExpandAdapter extends BaseExpandableListAdapter {
-    FirebaseStorage storage = FirebaseStorage.getInstance("gs://how-about-a-cafe.appspot.com");
-    StorageReference storageRef = storage.getReference();
+//    FirebaseStorage storage = FirebaseStorage.getInstance("gs://how-about-a-cafe.appspot.com");
+//    StorageReference storageRef = storage.getReference();
     private Context context;
     private int groupLayout = 0;
     private int chlidLayout = 0;
     private ArrayList<myGroup> DataList;
     private LayoutInflater myinf = null;
     private ViewHolder viewHolder;
-    private String data;
 
     public ExpandAdapter(Context context, int groupLay, int chlidLay, ArrayList<myGroup> DataList) {
         this.DataList = DataList;
@@ -38,8 +38,6 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         this.chlidLayout = chlidLay;
         this.context = context;
         this.myinf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        Item item = new Item();
-        data = item.getCafe_name();
     }
 
     @Override
@@ -68,18 +66,14 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
             convertView = myinf.inflate(this.chlidLayout, parent, false);
         }
         ImageView childImage = (ImageView) convertView.findViewById(R.id.childImage);
-//        Glide.with(context).load()
+//        if (DataList.get(groupPosition).childImage == null)
+//            childImage.setImageResource(R.drawable.ic_favorite_black_24dp);
+//        else
+//            childImage.setImageURI(DataList.get(groupPosition).childImage.get(childPosition));
         TextView childPrice = (TextView) convertView.findViewById(R.id.childPrice);
         childPrice.setText(DataList.get(groupPosition).childPrice.get(childPosition));
         TextView childName = (TextView) convertView.findViewById(R.id.childName);
         childName.setText(DataList.get(groupPosition).child.get(childPosition));
-
-        if (data != null) {
-            Log.d("cafename", data);
-        }
-        else {
-            Log.d("cafename", "null");
-        }
 
         return convertView;
     }

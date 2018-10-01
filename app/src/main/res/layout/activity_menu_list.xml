@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/background">
+    android:background="@drawable/background"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/mytoolbar"
@@ -28,19 +28,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:textColor="#ffffff"
             android:text="카페이름"
+            android:textColor="#ffffff"
             android:textSize="20sp" />
     </android.support.v7.widget.Toolbar>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
         <ExpandableListView
             android:id="@+id/expanded_menu"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="450sp"
             android:childDivider="@drawable/line"
             android:divider="@drawable/line"
             android:dividerHeight="1dp"
@@ -50,12 +49,14 @@
             android:id="@+id/cal_btn"
             android:layout_width="match_parent"
             android:layout_height="50sp"
-            android:layout_gravity="bottom"
-            android:textColor="#000000"
+            android:layout_alignParentBottom="true"
+            android:background="#d9d8d8"
             android:text="계산서"
-            android:textStyle="bold"
-            android:background="#d9d8d8"/>
-    </FrameLayout>
+            android:textColor="#000000"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+
 
 
 </LinearLayout>
