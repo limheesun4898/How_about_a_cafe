@@ -35,7 +35,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <Spinner
@@ -62,7 +62,7 @@
             <EditText
                 android:id="@+id/write_review_edit"
                 android:layout_width="300dp"
-                android:layout_height="340dp"
+                android:layout_height="300dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/spinner"
@@ -80,8 +80,34 @@
                 android:layout_marginTop="8dp"
                 android:text="0 / 200"
                 android:textColor="#ffffff" />
-
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28sp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="48sp">
+            <ImageView
+                android:id="@+id/write_review_photo_select"
+                android:layout_width="40sp"
+                android:layout_height="40sp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/photo" />
+
+            <TextView
+                android:id="@+id/write_review_set_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:layout_marginLeft="5sp"
+                android:layout_marginBottom="5sp"
+                android:layout_gravity="bottom"
+                android:text="이미지가 없습니다" />
+        </LinearLayout>
+
+
+
     </FrameLayout>
 
 
