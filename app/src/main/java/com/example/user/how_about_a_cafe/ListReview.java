@@ -60,8 +60,6 @@ public class ListReview extends AppCompatActivity {
         recycleradapter = new ListReviewRecyclerAdapter(mItems, ListReview.this);
         recyclerView.setAdapter(recycleradapter);
 
-        mItems.clear();
-
         data = new ArrayList<>();
         firebaseDatabase.child(cafe_name).child("사이드 메뉴").addValueEventListener(new ValueEventListener() {
             @Override
@@ -160,12 +158,14 @@ public class ListReview extends AppCompatActivity {
                                 recyclerView.setVisibility(View.VISIBLE);
                                 null_text.setVisibility(View.GONE);
                                 if (item.isIsimage()){
+                                    mItems.clear();
                                     ReviewItem a = new ReviewItem(item.getReview(), item.getRating(),item.getUrl(), item.isIsimage());
                                     mItems.add(a);
                                     recycleradapter.notifyDataSetChanged();
                                 }
 
                                 else{
+                                    mItems.clear();
                                     ReviewItem a = new ReviewItem(item.getReview(), item.getRating(), item.isIsimage());
                                     mItems.add(a);
                                     recycleradapter.notifyDataSetChanged();
