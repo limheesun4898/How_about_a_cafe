@@ -143,14 +143,13 @@ public class MenuList extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            side.child.add(snapshot.getKey());
-                            side.childPrice.add(snapshot.getValue().toString() + "원");
-
                             mStorageRef.child(data + "/사이드 메뉴/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-//                                    if ((snapshot.getKey() + ".png").equals(mStorageRef.child(data + "/사이드 메뉴/" + snapshot.getKey() + ".png").getName()))
-//                                    side.childImage.add(uri);
+                                    side.child.add(snapshot.getKey());
+                                    side.childPrice.add(snapshot.getValue().toString() + "원");
+                                    side.childImage.add(uri);
+                                    Toast.makeText(MenuList.this, "SS", Toast.LENGTH_SHORT).show();
 
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -189,8 +188,6 @@ public class MenuList extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            drink.child.add(snapshot.getKey());
-                            drink.childPrice.add(snapshot.getValue().toString() + "원");
                             if (snapshot.getKey().equals("SIZE")) {
                                 drink.child.remove("SIZE");
                                 drink.childPrice.remove(snapshot.getValue() + "원");
@@ -216,20 +213,23 @@ public class MenuList extends AppCompatActivity {
                                 drink.child.remove("SIZE_CNT");
                                 drink.childPrice.remove(snapshot.getValue() + "원");
                             }
-//                            mStorageRef.child(data + "/음료/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                @Override
-//                                public void onSuccess(Uri uri) {
-//                                    if (snapshot.getKey().equals("ICE") || snapshot.getKey().equals("ICE2") || snapshot.getKey().equals("SIZE"))
-//                                        return;
-//                                    else
-//                                        drink.childImage.add(uri);
-//                                }
-//                            }).addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    Log.d("drink_fail", "Failed");
-//                                }
-//                            });
+                            mStorageRef.child(data + "/음료/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    if (snapshot.getKey().equals("ICE") || snapshot.getKey().equals("ICE2") || snapshot.getKey().equals("SIZE")) {
+                                        return;
+                                    } else {
+                                        drink.child.add(snapshot.getKey());
+                                        drink.childPrice.add(snapshot.getValue().toString() + "원");
+                                        drink.childImage.add(uri);
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("drink_fail", "Failed");
+                                }
+                            });
 
 
                         }

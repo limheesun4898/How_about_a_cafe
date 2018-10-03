@@ -65,16 +65,12 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             convertView = myinf.inflate(this.chlidLayout, parent, false);
         }
-        ImageView childImage = (ImageView) convertView.findViewById(R.id.childImage);
-        if (DataList.get(groupPosition).childImage == null)
-            childImage.setImageResource(R.drawable.ic_favorite_black_24dp);
-        else {
-            Glide.with(context).load(DataList.get(groupPosition).childImage.get(childPosition)).into(childImage);
-        }
         TextView childPrice = (TextView) convertView.findViewById(R.id.childPrice);
         childPrice.setText(DataList.get(groupPosition).childPrice.get(childPosition));
         TextView childName = (TextView) convertView.findViewById(R.id.childName);
         childName.setText(DataList.get(groupPosition).child.get(childPosition));
+        ImageView childImage = (ImageView) convertView.findViewById(R.id.childImage);
+        Glide.with(context).load(DataList.get(groupPosition).childImage.get(childPosition)).into(childImage);
 
         return convertView;
     }
