@@ -6,17 +6,17 @@ public class ReviewItem {
     private String url;
     private boolean isimage;
 
-    ReviewItem() {
+    public ReviewItem() {
 
     }
 
-    ReviewItem(String review, String rating, boolean isimage) {
+    public ReviewItem(String review, String rating, boolean isimage) {
         this.review = review;
         this.rating = rating;
         this.isimage = isimage;
     }
 
-    ReviewItem(String review, String rating, String url, boolean isimage) {
+    public ReviewItem(String review, String rating, String url, boolean isimage) {
         this.review = review;
         this.rating = rating;
         this.url = url;

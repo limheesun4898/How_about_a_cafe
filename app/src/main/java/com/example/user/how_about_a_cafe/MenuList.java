@@ -46,7 +46,6 @@ public class MenuList extends AppCompatActivity {
     private myGroup drink;
     private boolean click = false;
     private String data;
-    private FirebaseStorage mm = FirebaseStorage.getInstance();
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
     @Override
@@ -75,19 +74,6 @@ public class MenuList extends AppCompatActivity {
 
         SharedPreferences preferences = getApplicationContext().getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         final String json = preferences.getString(FAVORITES, null);
-
-//        mStorageRef.child(data + "/").child("사이드 메뉴/").child("녹차라떼.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//                Toast.makeText(MenuList.this, String.valueOf(uri), Toast.LENGTH_SHORT).show();
-////                Log.d("uri", String.valueOf(uri));
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Toast.makeText(MenuList.this, "실패쓰", Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
 
         if (json != null && json.contains(data)) {
@@ -120,22 +106,29 @@ public class MenuList extends AppCompatActivity {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             side.child.add(snapshot.getKey());
                             side.childPrice.add(snapshot.getValue().toString() + "원");
-//                            mStorageRef.child(data + "/").child("사이드 메뉴/").child(snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                            mStorageRef.child(data + "/사이드 메뉴/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
 //                                @Override
 //                                public void onSuccess(Uri uri) {
-//                                    Glide.with(MenuList.this).load(uri).into(image);
 //                                    side.childImage.add(uri);
 //                                }
 //                            }).addOnFailureListener(new OnFailureListener() {
 //                                @Override
 //                                public void onFailure(@NonNull Exception e) {
-//                                    Toast.makeText(MenuList.this, "실패쓰", Toast.LENGTH_SHORT).show();
+//                                    Log.d("sidemenu failed", "사이드 메뉴.사이드 메뉴");
+//                                }
+//                            });
+//                            mStorageRef.child(data + "/사이드메뉴/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                @Override
+//                                public void onSuccess(Uri uri) {
+//                                    side.childImage.add(uri);
+//                                }
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception e) {
+//                                    Log.d("sidemenu failed", "사이드 메뉴.사이드메뉴");
 //                                }
 //                            });
 
-//                            mStorageRef = mStorageRef.child(data + "/").child("사이드 메뉴/").child(snapshot.getKey() + ".png");
-//                            Glide.with(MenuList.this).load(mStorageRef).into(image);
-//                            Log.d("mStorageRef", String.valueOf(mStorageRef));
 
                         }
 
@@ -149,13 +142,36 @@ public class MenuList extends AppCompatActivity {
                 firebaseDatabase.child(data).child("사이드메뉴").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             side.child.add(snapshot.getKey());
                             side.childPrice.add(snapshot.getValue().toString() + "원");
 
-//                            mStorageRef = mm.getReference(data + "/사이드 메뉴/오리지날번.png");
-//                            Glide.with(MenuList.this).load(mStorageRef).into(image);
-//                            Log.d("mStorageRef", String.valueOf(mStorageRef));
+                            mStorageRef.child(data + "/사이드 메뉴/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+//                                    if ((snapshot.getKey() + ".png").equals(mStorageRef.child(data + "/사이드 메뉴/" + snapshot.getKey() + ".png").getName()))
+//                                    side.childImage.add(uri);
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("sidemenu failed", "사이드메뉴.사이드 메뉴");
+                                }
+                            });
+
+//                            mStorageRef.child(data + "/사이드메뉴/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                @Override
+//                                public void onSuccess(Uri uri) {
+//                                    side.childImage.add(uri);
+//                                }
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception e) {
+//                                    Log.d("sidemenu failed", "사이드메뉴.사이드메뉴");
+//                                }
+//                            });
+
                         }
 
                     }
@@ -172,10 +188,9 @@ public class MenuList extends AppCompatActivity {
                 firebaseDatabase.child(data).child("음료").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             drink.child.add(snapshot.getKey());
                             drink.childPrice.add(snapshot.getValue().toString() + "원");
-
                             if (snapshot.getKey().equals("SIZE")) {
                                 drink.child.remove("SIZE");
                                 drink.childPrice.remove(snapshot.getValue() + "원");
@@ -201,6 +216,20 @@ public class MenuList extends AppCompatActivity {
                                 drink.child.remove("SIZE_CNT");
                                 drink.childPrice.remove(snapshot.getValue() + "원");
                             }
+//                            mStorageRef.child(data + "/음료/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                @Override
+//                                public void onSuccess(Uri uri) {
+//                                    if (snapshot.getKey().equals("ICE") || snapshot.getKey().equals("ICE2") || snapshot.getKey().equals("SIZE"))
+//                                        return;
+//                                    else
+//                                        drink.childImage.add(uri);
+//                                }
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception e) {
+//                                    Log.d("drink_fail", "Failed");
+//                                }
+//                            });
 
 
                         }

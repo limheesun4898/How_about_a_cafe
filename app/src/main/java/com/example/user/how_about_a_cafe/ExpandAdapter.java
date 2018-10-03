@@ -23,7 +23,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 public class ExpandAdapter extends BaseExpandableListAdapter {
-//    FirebaseStorage storage = FirebaseStorage.getInstance("gs://how-about-a-cafe.appspot.com");
+    //    FirebaseStorage storage = FirebaseStorage.getInstance("gs://how-about-a-cafe.appspot.com");
 //    StorageReference storageRef = storage.getReference();
     private Context context;
     private int groupLayout = 0;
@@ -66,10 +66,11 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
             convertView = myinf.inflate(this.chlidLayout, parent, false);
         }
         ImageView childImage = (ImageView) convertView.findViewById(R.id.childImage);
-//        if (DataList.get(groupPosition).childImage == null)
-//            childImage.setImageResource(R.drawable.ic_favorite_black_24dp);
-//        else
-//            childImage.setImageURI(DataList.get(groupPosition).childImage.get(childPosition));
+        if (DataList.get(groupPosition).childImage == null)
+            childImage.setImageResource(R.drawable.ic_favorite_black_24dp);
+        else {
+            Glide.with(context).load(DataList.get(groupPosition).childImage.get(childPosition)).into(childImage);
+        }
         TextView childPrice = (TextView) convertView.findViewById(R.id.childPrice);
         childPrice.setText(DataList.get(groupPosition).childPrice.get(childPosition));
         TextView childName = (TextView) convertView.findViewById(R.id.childName);

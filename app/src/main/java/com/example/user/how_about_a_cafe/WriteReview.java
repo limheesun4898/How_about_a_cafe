@@ -254,6 +254,7 @@ public class WriteReview extends AppCompatActivity {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 downloadUrl = filePath.getDownloadUrl();
                 isimage = true;
+                Toast.makeText(WriteReview.this, "이미지 ㅇ", Toast.LENGTH_SHORT).show();
                 photo_set.setText("이미지가 등록되었습니다");
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -338,14 +339,14 @@ public class WriteReview extends AppCompatActivity {
 
                     if (isimage) {
                         ReviewItem a = new ReviewItem(editReview.getText().toString(), String.valueOf(rating), String.valueOf(downloadUrl), isimage);     //작성한 리뷰와 별점이 파이어베이스에 올라감
-                        FirebaseDatabase.getInstance().getReference().child("Review").child(menu).child(formatDate).setValue(a); //formatData는 작성한 시간
+                        FirebaseDatabase.getInstance().getReference().child("Review").child(menu).setValue(a); //formatData는 작성한 시간
                         finish();
                         return true;
                     }
 
                     else {
                         ReviewItem a = new ReviewItem(editReview.getText().toString(), String.valueOf(rating), isimage);     //작성한 리뷰와 별점이 파이어베이스에 올라감
-                        FirebaseDatabase.getInstance().getReference().child("Review").child(menu).child(formatDate).setValue(a); //formatData는 작성한 시간
+                        FirebaseDatabase.getInstance().getReference().child("Review").child(menu).setValue(a); //formatData는 작성한 시간
                         finish();
                         return true;
                     }

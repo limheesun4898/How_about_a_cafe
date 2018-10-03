@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/background"
     tools:context=".ListReview">
 
     <android.support.v7.widget.Toolbar
@@ -22,10 +23,31 @@
             android:textSize="20sp" />
     </android.support.v7.widget.Toolbar>
 
+    <Spinner
+        android:id="@+id/list_review_spinner"
+        android:layout_width="180sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_review_recyclerview"
+        android:background="@drawable/spinner">
+
+    </Spinner>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_review_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/list_review_null_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:layout_gravity="center"
+            android:text="리뷰가 없습니다"/>
+    </FrameLayout>
+
 
 </LinearLayout>

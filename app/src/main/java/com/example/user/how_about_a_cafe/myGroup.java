@@ -19,4 +19,5 @@ public class myGroup {
         childPrice = new ArrayList<String>();
         childImage = new ArrayList<Uri>();
     }
+
 }
