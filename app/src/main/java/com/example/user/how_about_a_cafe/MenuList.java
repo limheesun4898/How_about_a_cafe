@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +36,8 @@ import java.util.ArrayList;
 
 public class MenuList extends AppCompatActivity {
     public static DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String uid = user.getUid();
     private static final String PREFS_NAME = "FILE_PREFERENCES";
     private static final String FAVORITES = "ITEM_FAVORITE";
     private int img;
@@ -91,8 +95,12 @@ public class MenuList extends AppCompatActivity {
         cal_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Cal_Custom_Dialog cal_custom_dialog = new Cal_Custom_Dialog(MenuList.this);
-                cal_custom_dialog.callFunction(data);
+                if (user == null)
+                    Toast.makeText(MenuList.this, "로그인 후 이용해주세요", Toast.LENGTH_SHORT).show();
+                else {
+                    Cal_Custom_Dialog cal_custom_dialog = new Cal_Custom_Dialog(MenuList.this);
+                    cal_custom_dialog.callFunction(data);
+                }
             }
         });
 
@@ -249,11 +257,13 @@ public class MenuList extends AppCompatActivity {
             case R.id.evnet:
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
+                break;
 
             case R.id.review_btn:
                 Intent intent1 = new Intent(MenuList.this, ListReview.class);
                 intent1.putExtra("cafe_name", data);
                 startActivity(intent1);
+                break;
 
         }
         return super.onOptionsItemSelected(item);

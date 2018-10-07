@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 public class Cal_Custom_Dialog {
     public static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     public static DatabaseReference databaseReference = firebaseDatabase.getReference();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String uid = user.getUid();
     private Context context;
     private ListView listView = null;
     private int total = 0;
@@ -52,7 +56,7 @@ public class Cal_Custom_Dialog {
 
         cal_refresh.setImageResource(R.drawable.refresh_24dp);
 
-        databaseReference.child("user_menu").child(cafe).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("user_menu").child(uid).child(cafe).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Cal_Menu_Item menu_item = dataSnapshot.getValue(Cal_Menu_Item.class);
@@ -91,7 +95,7 @@ public class Cal_Custom_Dialog {
                     cal_refresh.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            databaseReference.child("user_menu").removeValue();
+                            databaseReference.child("user_menu").child(uid).child(cafe).removeValue();
                             oData.clear();
                             cal_list_adapter = new Cal_List_Adapter(oData);
                             listView.setAdapter(cal_list_adapter);

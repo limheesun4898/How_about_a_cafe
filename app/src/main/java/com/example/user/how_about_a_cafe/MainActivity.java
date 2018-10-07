@@ -108,11 +108,11 @@ public class MainActivity extends AppCompatActivity
         itemList.add(new ListItem(R.drawable.angelinus, "엔제리너스", "http://www.angelinus.com/Event/Event_List.asp"));
         itemList.add(new ListItem(R.drawable.twosome, "투썸플레이스", "https://www.twosome.co.kr:7009/event/list.asp"));
         itemList.add(new ListItem(R.drawable.cafebene, "카페베네", "http://www.caffebene.co.kr/Content/Gnb/Community/Event.aspx?code=T3M1I1"));
-        itemList.add(new ListItem(R.drawable.hollys, "할리스 커피", "http://www.hollys.co.kr/news/notice/list.do"));
-        itemList.add(new ListItem(R.drawable.tomntoms, "탐엔탐스", "https://www.tomntoms.com/event/main.php"));
+        itemList.add(new ListItem(R.drawable.hollys, "할리스", "http://www.hollys.co.kr/news/notice/list.do"));
+        itemList.add(new ListItem(R.drawable.tomntoms, "탐앤탐스", "https://www.tomntoms.com/event/main.php"));
         itemList.add(new ListItem(R.drawable.gongcha, "공차", "http://www.gong-cha.co.kr/brand/board/event.php"));
         itemList.add(new ListItem(R.drawable.bback, "빽다방", "http://paikdabang.com/news/?cate=event"));
-        itemList.add(new ListItem(R.drawable.cafe_gate, "카페 게이트", "http://cafegate.co.kr"));
+        itemList.add(new ListItem(R.drawable.cafe_gate, "카페게이트", "http://cafegate.co.kr"));
         itemList.add(new ListItem(R.drawable.coffeebean, "커피빈", "http://www.coffeebeankorea.com/main/main.asp"));
         adapter.notifyDataSetChanged();
     }
