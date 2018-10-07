@@ -3,12 +3,15 @@ package com.example.user.how_about_a_cafe;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +38,7 @@ public class CustomDialog {
         this.context = context;
     }
 
-    public void callFunction(final String menu, final String cafe, final String category) {
+    public void callFunction(final String menu, final String cafe, final String category, final Uri imageurl) {
 
         // 커스텀 다이얼로그를 정의하기위해 Dialog클래스를 생성한다.
         final Dialog dlg = new Dialog(context);
@@ -49,6 +52,7 @@ public class CustomDialog {
         // 커스텀 다이얼로그를 노출한다.
         dlg.show();
 
+        final ImageView menu_image = (ImageView) dlg.findViewById(R.id.menu_on_click_image);
         final TextView menu_name = (TextView) dlg.findViewById(R.id.menu_on_click_name);
         final TextView menu_price = (TextView) dlg.findViewById(R.id.menu_on_click_price);
         final Button cancel = (Button) dlg.findViewById(R.id.menu_on_click_cancle);
@@ -65,6 +69,7 @@ public class CustomDialog {
         final Button size3 = (Button) dlg.findViewById(R.id.menu_on_click_size3);
         final Button ok_btn = (Button) dlg.findViewById(R.id.menu_on_click_ok);
 
+        Glide.with(context).load(imageurl).into(menu_image);
         menu_name.setText(menu);
         hot_btn.setEnabled(false);
         size1.setEnabled(false);

@@ -2,6 +2,7 @@ package com.example.user.how_about_a_cafe;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,9 +19,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,26 +44,28 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
-    private FirebaseAuth mFirebaseAuth;
-    FirebaseUser user;
+    private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseUser user = mFirebaseAuth.getCurrentUser();
     private TextView Uname;
     private TextView Uemail;
     private CircleImageView Uiamge;
-    Bitmap bitmap;
-    Context mContext;
+    private Bitmap bitmap;
+    private Context mContext;
     private List<ListItem> itemList = new ArrayList<>();
     private MyRecyclerViewAdapter adapter;
-    DatabaseReference myRef;
+    private DatabaseReference myRef;
     final Context context = this;
+    private String stUid;
+    LinearLayout Nologin, Yeslogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_naviagator);
         setTitle("카페 어때?");
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+        stUid = sharedPreferences.getString("Uid", "");
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        user = mFirebaseAuth.getCurrentUser();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("users");
 
@@ -83,6 +88,8 @@ public class MainActivity extends AppCompatActivity
         Uname = v.findViewById(R.id.Username);
         Uemail = v.findViewById(R.id.Useremail);
         Uiamge = v.findViewById(R.id.UserImage);
+        Nologin = v.findViewById(R.id.Nologin);
+        Yeslogin = v.findViewById(R.id.Yeslogin);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -91,7 +98,6 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
 
     }
 
@@ -111,71 +117,30 @@ public class MainActivity extends AppCompatActivity
         adapter.notifyDataSetChanged();
     }
 
-//    private void UserAccount() {
-//        Thread mThread = new Thread() {
-//            @Override
-//            public void run() {
-//                try {
-//                    URL url = null;
-//                    url = new URL(mFirebaseAuth.getCurrentUser().getPhotoUrl().toString());
-//                    if (url == null) {
-//                        return;
-//                    }
-//                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//                    conn.setDoInput(true);
-//                    conn.connect();
-//
-//                    InputStream is = conn.getInputStream();
-//                    bitmap = BitmapFactory.decodeStream(is);
-//
-//                } catch (MalformedURLException ee) {
-//                    ee.printStackTrace();
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-//        mThread.start();
-//
-//        try {
-//            mThread.join();
-//            Uiamge.setImageBitmap(bitmap);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        Uname.setText(mFirebaseAuth.getCurrentUser().getDisplayName());
-//        Uemail.setText(mFirebaseAuth.getCurrentUser().getEmail());
-//
-//    }
-
     //현재 사용자 확인
     @Override
     public void onStart() {
         super.onStart();
         if (user == null) {
+            Yeslogin.setVisibility(View.GONE);
+            Nologin.setVisibility(View.VISIBLE);
 
         } else {
-            //UserAccount();
-//            Uiamge.setImageURI(user.getPhotoUrl());
-//            Uname.setText(user.getDisplayName());
-//            Uemail.setText(user.getEmail());
-            Hashtable<String, String> profile = new Hashtable<String, String>();
-            profile.put("email", user.getEmail());
-            profile.put("photo", "");
-            myRef.child(user.getUid()).setValue(profile);
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference();
 
-            myRef.child("users").child(String.valueOf(Uname)).addListenerForSingleValueEvent(new ValueEventListener() {
+            myRef.child("users").child(stUid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String value = dataSnapshot.getValue().toString();
-                    String stphoto = dataSnapshot.child("photo").getValue().toString();
-                    if (TextUtils.isEmpty(stphoto)){
-                        Uiamge.setImageResource(R.drawable.account);
-                    }else{
+                    String stPhoto = dataSnapshot.child("photo").getValue().toString();
+                    String stname = dataSnapshot.child("name").getValue().toString();
+                    String stemail = dataSnapshot.child("email").getValue().toString();
+                    System.out.println("LOGIN : " + stname);
+                    System.out.println("LOGIN : " + stemail);
 
-
-                    }
+                    Uname.setText(stname);
+                    Uemail.setText(stemail);
+                    Glide.with(context).load(stPhoto).into(Uiamge);
                 }
 
                 @Override
@@ -183,6 +148,7 @@ public class MainActivity extends AppCompatActivity
 
                 }
             });
+
         }
     }
 
@@ -207,6 +173,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -236,10 +203,13 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_location) {
             startActivity(new Intent(this, Google_map.class));
         } else if (id == R.id.nav_review) {
-            Toast.makeText(this, "리뷰 보기", Toast.LENGTH_SHORT).show();
-            mFirebaseAuth.signOut();
-            startActivity(new Intent(this, Login.class));
-            finish();
+            if (user == null) {
+                Toast.makeText(mContext, "로그인 후 이용해주세요", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Intent intent = new Intent(this, MyReview.class);
+                startActivity(intent);
+            }
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

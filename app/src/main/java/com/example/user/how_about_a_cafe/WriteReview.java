@@ -24,10 +24,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,7 +46,11 @@ import java.util.List;
 public class WriteReview extends AppCompatActivity {
     public static DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
     private StorageReference mStorge = FirebaseStorage.getInstance().getReference();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String uid = user.getUid();
     private EditText editReview;
+    private String name;
+    private String profile;
     private TextView textNum;
     private Spinner spinner;
     private RatingBar ratingBar;
@@ -58,7 +62,9 @@ public class WriteReview extends AppCompatActivity {
     private TextView photo_set;
     private ImageView photo_select;
     private int PERMISSIONS_READ_STORAGE = 0;
-    static Task<Uri> downloadUrl;
+    private boolean text_null = true;
+    private int selection;
+    static Uri downloadUrl;
     static boolean isimage = false;
     final int GALLERY_INTENT = 100;
 
@@ -102,17 +108,11 @@ public class WriteReview extends AppCompatActivity {
             }
         });
 
-        data = new ArrayList<>();
-        firebaseDatabase.child(cafe_name).child("사이드 메뉴").addValueEventListener(new ValueEventListener() {
+        firebaseDatabase.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    data.add(snapshot.getKey());
-
-                }
-
-                spinnerAdapter = new SpinnerAdapter(WriteReview.this, data);
-                spinner.setAdapter(spinnerAdapter);
+                name = dataSnapshot.child("name").getValue().toString();
+                profile = dataSnapshot.child("photo").getValue().toString();
             }
 
             @Override
@@ -121,6 +121,7 @@ public class WriteReview extends AppCompatActivity {
             }
         });
 
+        data = new ArrayList<>();
         firebaseDatabase.child(cafe_name).child("사이드메뉴").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -185,6 +186,7 @@ public class WriteReview extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 menu = spinnerAdapter.getItem(i).toString();
+                selection = i;
             }
 
             @Override
@@ -192,6 +194,9 @@ public class WriteReview extends AppCompatActivity {
 
             }
         });
+
+        if (isimage)
+            photo_set.setText("이미지가 등록되었습니다");
 
     }
 
@@ -220,6 +225,10 @@ public class WriteReview extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 textNum.setText(charSequence.length() + " /200");
+                if (charSequence.length() > 0)
+                    text_null = false;
+                else
+                    text_null = true;
             }
 
             @Override
@@ -228,6 +237,7 @@ public class WriteReview extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -245,6 +255,7 @@ public class WriteReview extends AppCompatActivity {
 
         }
     }
+
     public void setList_image(Intent data) {
         Uri file = data.getData();
         final StorageReference filePath = mStorge.child("images/" + formatDate);
@@ -252,10 +263,8 @@ public class WriteReview extends AppCompatActivity {
         filePath.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                downloadUrl = filePath.getDownloadUrl();
+                downloadUrl = taskSnapshot.getDownloadUrl();
                 isimage = true;
-                Toast.makeText(WriteReview.this, "이미지 ㅇ", Toast.LENGTH_SHORT).show();
-                photo_set.setText("이미지가 등록되었습니다");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -306,6 +315,7 @@ public class WriteReview extends AppCompatActivity {
         i.setType("image/*");
         startActivityForResult(i, GALLERY_INTENT);
     }
+
     public void permission() {
 
         ActivityCompat.requestPermissions(this,
@@ -331,25 +341,18 @@ public class WriteReview extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.write_review_send:        //리뷰 파이어베이스에 저장해주는 부붑
-                if (rating == 0.0)
-                    Toast.makeText(this, "별점을 지정해주세요", Toast.LENGTH_SHORT).show();
+            case R.id.write_review_send:    //리뷰 파이어베이스에 저장해주는 부붑
+                if (rating == 0.0 || text_null)
+                    Toast.makeText(this, "별점과 리뷰을 작성해주세요", Toast.LENGTH_SHORT).show();
                 else {
                     Toast.makeText(WriteReview.this, "리뷰가 작성되었습니다", Toast.LENGTH_SHORT).show();
+                    MyReviewItem b = new MyReviewItem(editReview.getText().toString(), String.valueOf(rating), String.valueOf(downloadUrl), formatDate, name, profile, menu, cafe_name, String.valueOf(selection), isimage);     //작성한 리뷰와 별점이 파이어베이스에 올라감
+                    ReviewItem a = new ReviewItem(editReview.getText().toString(), String.valueOf(rating), String.valueOf(downloadUrl), formatDate, name, profile, menu, cafe_name, String.valueOf(selection), isimage);     //작성한 리뷰와 별점이 파이어베이스에 올라감
+                    FirebaseDatabase.getInstance().getReference().child("Review").child(cafe_name).child(menu).child(formatDate).setValue(a);
+                    FirebaseDatabase.getInstance().getReference().child("UserReview").child(uid).child(formatDate).setValue(b);//formatData는 작성한 시간
+                    finish();
+                    return true;
 
-                    if (isimage) {
-                        ReviewItem a = new ReviewItem(editReview.getText().toString(), String.valueOf(rating), String.valueOf(downloadUrl), isimage);     //작성한 리뷰와 별점이 파이어베이스에 올라감
-                        FirebaseDatabase.getInstance().getReference().child("Review").child(menu).setValue(a); //formatData는 작성한 시간
-                        finish();
-                        return true;
-                    }
-
-                    else {
-                        ReviewItem a = new ReviewItem(editReview.getText().toString(), String.valueOf(rating), isimage);     //작성한 리뷰와 별점이 파이어베이스에 올라감
-                        FirebaseDatabase.getInstance().getReference().child("Review").child(menu).setValue(a); //formatData는 작성한 시간
-                        finish();
-                        return true;
-                    }
 
                 }
         }

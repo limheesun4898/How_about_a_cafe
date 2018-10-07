@@ -73,12 +73,18 @@
         <activity android:name=".Signup" />
         <activity android:name=".Google_map" />
         <activity android:name=".MenuList" />
-        <activity android:name=".WriteReview"/>
-        <activity android:name=".ListReview"
-            android:theme="@style/AppTheme"/>
+        <activity android:name=".WriteReview" />
+        <activity android:name=".Onclick_ImageActivity" />
+        <activity
+            android:name=".ListReview"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".FavoriteList"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyReview"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".EditActivity"></activity>
     </application>
 
 </manifest>

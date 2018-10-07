@@ -100,76 +100,25 @@ public class MenuList extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 side = new myGroup("사이드 메뉴");
-                firebaseDatabase.child(data).child("사이드 메뉴").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            side.child.add(snapshot.getKey());
-                            side.childPrice.add(snapshot.getValue().toString() + "원");
-//                            mStorageRef.child(data + "/사이드 메뉴/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                @Override
-//                                public void onSuccess(Uri uri) {
-//                                    side.childImage.add(uri);
-//                                }
-//                            }).addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    Log.d("sidemenu failed", "사이드 메뉴.사이드 메뉴");
-//                                }
-//                            });
-//                            mStorageRef.child(data + "/사이드메뉴/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                @Override
-//                                public void onSuccess(Uri uri) {
-//                                    side.childImage.add(uri);
-//                                }
-//                            }).addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    Log.d("sidemenu failed", "사이드 메뉴.사이드메뉴");
-//                                }
-//                            });
 
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
                 firebaseDatabase.child(data).child("사이드메뉴").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            mStorageRef.child(data + "/사이드 메뉴/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            mStorageRef.child(data + "/사이드메뉴/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     side.child.add(snapshot.getKey());
                                     side.childPrice.add(snapshot.getValue().toString() + "원");
                                     side.childImage.add(uri);
-                                    Toast.makeText(MenuList.this, "SS", Toast.LENGTH_SHORT).show();
 
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.d("sidemenu failed", "사이드메뉴.사이드 메뉴");
+                                    Log.d("sidemenu failed", "Failed");
                                 }
                             });
-
-//                            mStorageRef.child(data + "/사이드메뉴/" + snapshot.getKey() + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                @Override
-//                                public void onSuccess(Uri uri) {
-//                                    side.childImage.add(uri);
-//                                }
-//                            }).addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    Log.d("sidemenu failed", "사이드메뉴.사이드메뉴");
-//                                }
-//                            });
 
                         }
 
@@ -258,7 +207,7 @@ public class MenuList extends AppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
                 CustomDialog customDialog = new CustomDialog(MenuList.this);
-                customDialog.callFunction(DataList.get(i).child.get(i1), data, String.valueOf(i));
+                customDialog.callFunction(DataList.get(i).child.get(i1), data, String.valueOf(i), DataList.get(i).childImage.get(i1));
                 return true;
             }
         });

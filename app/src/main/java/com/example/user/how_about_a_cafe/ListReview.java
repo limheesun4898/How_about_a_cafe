@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,24 +13,34 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ListReview extends AppCompatActivity {
     public static ArrayList<ReviewItem> mItems = new ArrayList<>();
     public static DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Spinner list_review_spinner;
     private String cafe_name;
     private List<String> data;
@@ -60,25 +71,15 @@ public class ListReview extends AppCompatActivity {
         recycleradapter = new ListReviewRecyclerAdapter(mItems, ListReview.this);
         recyclerView.setAdapter(recycleradapter);
 
+//        ratingBar.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                return true;
+//            }
+//        });
+
         data = new ArrayList<>();
-        firebaseDatabase.child(cafe_name).child("사이드 메뉴").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    data.add(snapshot.getKey());
-
-                }
-
-                spinnerAdapter = new SpinnerAdapter(ListReview.this, data);
-                list_review_spinner.setAdapter(spinnerAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
+        mItems.clear();
         firebaseDatabase.child(cafe_name).child("사이드메뉴").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -145,32 +146,37 @@ public class ListReview extends AppCompatActivity {
                 menu = spinnerAdapter.getItem(i).toString();
 
                 if (firebaseDatabase.child("Review").getKey() != null) {
-                    firebaseDatabase.child("Review").child(menu).addValueEventListener(new ValueEventListener() {
+                    firebaseDatabase.child("Review").child(cafe_name).child(menu).addChildEventListener(new ChildEventListener() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                             ReviewItem item = dataSnapshot.getValue(ReviewItem.class);
 
-                            if (item == null) {
-                                null_text.setVisibility(View.VISIBLE);
-                                recyclerView.setVisibility(View.GONE);
-                            }
-                            else {
-                                recyclerView.setVisibility(View.VISIBLE);
-                                null_text.setVisibility(View.GONE);
-                                if (item.isIsimage()){
-                                    mItems.clear();
-                                    ReviewItem a = new ReviewItem(item.getReview(), item.getRating(),item.getUrl(), item.isIsimage());
-                                    mItems.add(a);
-                                    recycleradapter.notifyDataSetChanged();
-                                }
+                            if (item.isIsimage()) {
+                                ReviewItem a = new ReviewItem(item.getReview(), item.getRating(), item.getUrl(), item.getFormatDate(), item.getName(), item.getProfile_image(), item.getMenu(), item.getCafe_name(), item.getSelection(), item.isIsimage());
+                                mItems.add(a);
+                                recycleradapter.notifyDataSetChanged();
 
-                                else{
-                                    mItems.clear();
-                                    ReviewItem a = new ReviewItem(item.getReview(), item.getRating(), item.isIsimage());
-                                    mItems.add(a);
-                                    recycleradapter.notifyDataSetChanged();
-                                }
+                            } else {
+                                ReviewItem a = new ReviewItem(item.getReview(), item.getRating(), item.getFormatDate(), item.getName(), item.getProfile_image(), item.getMenu(), item.getCafe_name(), item.getSelection(), item.isIsimage());
+                                mItems.add(a);
+                                recycleradapter.notifyDataSetChanged();
                             }
+                            addData();
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            finish();
+                            startActivity(getIntent());
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                         }
 
@@ -189,7 +195,16 @@ public class ListReview extends AppCompatActivity {
         });
 
 
+    }
 
+    public void addData() {
+        if (mItems.size() == 0) {
+            null_text.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            null_text.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -203,9 +218,13 @@ public class ListReview extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.write_review_btn:
-                Intent intent = new Intent(ListReview.this, WriteReview.class);
-                intent.putExtra("cafe_name", cafe_name);
-                startActivity(intent);
+                if (user != null) {
+                    Intent intent = new Intent(ListReview.this, WriteReview.class);
+                    intent.putExtra("cafe_name", cafe_name);
+                    startActivity(intent);
+                } else
+                    Toast.makeText(this, "로그인 후 이용해 주세요", Toast.LENGTH_SHORT).show();
+
 
         }
         return super.onOptionsItemSelected(item);

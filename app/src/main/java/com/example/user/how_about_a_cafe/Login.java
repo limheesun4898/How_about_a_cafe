@@ -1,5 +1,6 @@
 package com.example.user.how_about_a_cafe;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -42,19 +43,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.util.Hashtable;
+
 public class Login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, onAuthStateChanged {
     private FirebaseAuth mFirebaseAuth;
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 1000;
     private CallbackManager mCallbackManager;
     private FirebaseAuth.AuthStateListener mAuthLiestener;
-    private DatabaseReference mDatabase;
+    FirebaseUser user;
 
     EditText Login_email, Login_password;
+    DatabaseReference myRef;
 
-    String name;
-    String email;
-    String photoUrl;
+    String name, email, photoUrl;
+    String email_name, email_email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,22 +72,26 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         Login_email = findViewById(R.id.Login_email);
         Login_password = findViewById(R.id.Login_password);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("users");
 
         mAuthLiestener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    SharedPreferences sharedPreferences = getSharedPreferences("email", MODE_PRIVATE);
+                    // User is signed in
+                    SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("uid", user.getUid());
-                    editor.putString("email", user.getEmail());
+                    editor.putString("Uid", user.getUid());
                     editor.apply();
+                    System.out.println("loginuid : " + user.getUid());
                 } else {
-
+                    // User is signed out
                 }
+                // ...
             }
         };
         GoogleSignInOptions gso = new
@@ -143,20 +150,26 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         if (!task.isSuccessful()) {
                             Toast.makeText(Login.this, "인증 실패", Toast.LENGTH_SHORT).show();
                         } else {
+
                             //구글 로그인 프로필 DB 저장
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
                             name = user.getDisplayName();
                             email = user.getEmail();
                             photoUrl = user.getPhotoUrl().toString();
                             //DB에 데이터 저장
-                            User_Data userData = new User_Data(name, email);
-                            mDatabase.child("Google_User").child(name).setValue(userData);
+                            Hashtable<String, String> profile = new Hashtable<String, String>();
+                            profile.put("name", name);
+                            profile.put("email", email);
+                            profile.put("photo", photoUrl);
+                            myRef.child(user.getUid()).setValue(profile);
+
                             startActivity(new Intent(Login.this, MainActivity.class));
                             finish();
                         }
                     }
                 });
     }
+
     // }
     //facebook
     private void handleFacebookAccessToken(AccessToken token) {
@@ -168,15 +181,19 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         if (!task.isSuccessful()) {
 
                         } else {
-
+                            // 프로필 DB 저장
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
                             name = user.getDisplayName();
+
                             photoUrl = user.getPhotoUrl().toString();
                             //DB에 데이터 저장
-                            User_Data userData = new User_Data(name, email);
-                            mDatabase.child("Facebook_User").child(name).setValue(userData);
+                            Hashtable<String, String> profile = new Hashtable<String, String>();
+                            profile.put("name", name);
+                            profile.put("email", "");
+                            profile.put("photo", photoUrl);
+                            myRef.child(user.getUid()).setValue(profile);
 
-                            startActivity(new Intent(Login.this, Signup.class));
+                            startActivity(new Intent(Login.this, MainActivity.class));
                             finish();
                         }
 
@@ -193,7 +210,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     //이메일 로그인
     @Override
     public void clickSignIn(String email, String password) {
-        mFirebaseAuth.signInWithEmailAndPassword(email,password)
+        mFirebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -204,14 +221,12 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                             } catch (FirebaseAuthInvalidUserException e) {
                                 Toast.makeText(Login.this, "존재하지 않는 email 입니다.", Toast.LENGTH_SHORT).show();
                             } catch (FirebaseAuthInvalidCredentialsException e) {
-                                Toast.makeText(Login.this,"이메일 형식이 맞지 않습니다." ,Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Login.this, "이메일 형식이 맞지 않습니다.", Toast.LENGTH_SHORT).show();
                             } catch (FirebaseNetworkException e) {
                                 Toast.makeText(Login.this, "Firebase NetworkException", Toast.LENGTH_SHORT).show();
                             } catch (Exception e) {
                             }
                         } else {
-
-
                             //로그인 성공
                             startActivity(new Intent(Login.this, MainActivity.class));
                             finish();
@@ -245,7 +260,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         super.onStop();
         if (mAuthLiestener != null)
             mFirebaseAuth.removeAuthStateListener(mAuthLiestener);
-        else{
+        else {
 
         }
     }
@@ -264,7 +279,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             case R.id.LoginBtn_Login:
                 String email = Login_email.getText().toString();
                 String password = Login_password.getText().toString();
-                clickSignIn(email, password);
+                if (email.isEmpty() || password.isEmpty()){
+                    Toast.makeText(this, "빈칸을 채워주세요 :)", Toast.LENGTH_SHORT).show();
+                } else {
+                    clickSignIn(email, password);
+                }
                 break;
             case R.id.gusetlogin:
                 Intent intent1 = new Intent(this, MainActivity.class);
