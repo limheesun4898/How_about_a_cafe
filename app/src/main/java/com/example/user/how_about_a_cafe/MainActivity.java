@@ -205,8 +205,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_review) {
             if (user == null) {
                 Toast.makeText(mContext, "로그인 후 이용해주세요", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 Intent intent = new Intent(this, MyReview.class);
                 startActivity(intent);
             }

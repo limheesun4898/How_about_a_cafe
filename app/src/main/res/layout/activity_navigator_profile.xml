@@ -17,6 +17,7 @@
         android:id="@+id/Yeslogin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="12sp"
         android:orientation="vertical">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/UserImage"
@@ -44,6 +45,7 @@
     <LinearLayout
         android:id="@+id/Nologin"
         android:visibility="gone"
+        android:layout_marginTop="12sp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

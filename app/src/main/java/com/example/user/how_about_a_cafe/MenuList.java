@@ -37,7 +37,6 @@ import java.util.ArrayList;
 public class MenuList extends AppCompatActivity {
     public static DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private String uid = user.getUid();
     private static final String PREFS_NAME = "FILE_PREFERENCES";
     private static final String FAVORITES = "ITEM_FAVORITE";
     private int img;
