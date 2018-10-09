@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context=".EditActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/edit_review_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="리뷰수정"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+    </android.support.v7.widget.Toolbar>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/background_review_outline" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/edit_spinner"
+                android:layout_width="180sp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:background="@drawable/spinner">
+
+            </Spinner>
+
+            <RatingBar
+                android:id="@+id/edit_ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="18dp"
+                android:isIndicator="false"
+                android:max="6"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="1" />
+
+            <EditText
+                android:id="@+id/edit_review_edit"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/spinner"
+                android:gravity="top"
+                android:maxLength="200"
+                android:padding="10dp"
+                android:textColor="#ffffff" />
+
+            <TextView
+                android:id="@+id/edit_review_textNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="70dp"
+                android:layout_marginTop="8dp"
+                android:text="0 / 200"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28sp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="48sp">
+            <ImageView
+                android:id="@+id/edit_review_photo_select"
+                android:layout_width="40sp"
+                android:layout_height="40sp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/photo" />
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+</LinearLayout>
