@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity
     private TextView Uname;
     private TextView Uemail;
     private CircleImageView Uiamge;
-    private Bitmap bitmap;
     private Context mContext;
     private List<ListItem> itemList = new ArrayList<>();
     private MyRecyclerViewAdapter adapter;
@@ -63,18 +63,22 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_naviagator);
         setTitle("카페 어때?");
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-        stUid = sharedPreferences.getString("Uid", "");
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("users");
+        try {
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+            stUid = sharedPreferences.getString("Uid", "");
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            myRef = database.getReference("users");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
         mContext = getApplicationContext();
 
         RecyclerView recyclerView = findViewById(R.id.main_recyclerview);
         recyclerView.setHasFixedSize(true);
         adapter = new MyRecyclerViewAdapter(itemList, this);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
         LinearLayoutMargin layoutMargin = new LinearLayoutMargin(20);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(layoutMargin);
@@ -132,15 +136,19 @@ public class MainActivity extends AppCompatActivity
             myRef.child("users").child(stUid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String stPhoto = dataSnapshot.child("photo").getValue().toString();
-                    String stname = dataSnapshot.child("name").getValue().toString();
-                    String stemail = dataSnapshot.child("email").getValue().toString();
-                    System.out.println("LOGIN : " + stname);
-                    System.out.println("LOGIN : " + stemail);
+                    try {
+                        String stPhoto = dataSnapshot.child("photo").getValue().toString();
+                        String stname = dataSnapshot.child("name").getValue().toString();
+                        String stemail = dataSnapshot.child("email").getValue().toString();
+                        System.out.println("LOGIN : " + stname);
+                        System.out.println("LOGIN : " + stemail);
 
-                    Uname.setText(stname);
-                    Uemail.setText(stemail);
-                    Glide.with(context).load(stPhoto).into(Uiamge);
+                        Uname.setText(stname);
+                        Uemail.setText(stemail);
+                        Glide.with(getApplicationContext()).load(stPhoto).into(Uiamge);
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -174,23 +182,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.favorit_icon, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.favorite) {
-            startActivity(new Intent(getApplicationContext(), FavoriteList.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem menuitem) {
@@ -200,6 +191,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, M_Account.class));
         } else if (id == R.id.nav_game) {
             Toast.makeText(this, "사다리게임", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_favortie) {
+            startActivity(new Intent(this, Favorite.class));
         } else if (id == R.id.nav_location) {
             startActivity(new Intent(this, Google_map.class));
         } else if (id == R.id.nav_review) {

@@ -64,7 +64,6 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class M_Account extends AppCompatActivity {
-    Bitmap bitmap;
     Context context = this;
     private TextView Username;
     private TextView Useremail;
@@ -86,6 +85,7 @@ public class M_Account extends AppCompatActivity {
     LinearLayout Onuser, Offuser;
     Button out;
     String stphoto, stname, stemail;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -98,10 +98,6 @@ public class M_Account extends AppCompatActivity {
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transform(new RoundedCorners(15));
 
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
-        stUid = sharedPreferences.getString("Uid", "");
-        System.out.println("userUid : " + stUid);
-
         Username = findViewById(R.id.Username);
         Useremail = findViewById(R.id.Useremail);
         UserImage = findViewById(R.id.UserImage);
@@ -109,16 +105,6 @@ public class M_Account extends AppCompatActivity {
         Offuser = findViewById(R.id.Offuser);
         out = findViewById(R.id.out);
         progress = findViewById(R.id.progress);
-
-        out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                startActivity(new Intent(M_Account.this, Login.class));
-                finish();
-            }
-        });
-
 
     }
 
@@ -140,7 +126,6 @@ public class M_Account extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-
             }
         };
         new AlertDialog.Builder(context)
@@ -156,62 +141,49 @@ public class M_Account extends AppCompatActivity {
         StorageReference storageRef = storage.getReference();
         String path = null;
         path = realpath;
-        Uri file = Uri.fromFile(new File(path));
-        StorageReference riversRef = storageRef.child("users").child(stUid + ".jpg");
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users");
+        if (path == null) {
+            return;
+        } else {
+            Uri file = Uri.fromFile(new File(path));
+            StorageReference riversRef = storageRef.child("users").child(stUid + ".jpg");
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("users");
 
-        // myRef.child("users").child(stUid).addListenerForSingleValueEvent(new ValueEventListener() {
-        //   @Override
-        // public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        //   stname = dataSnapshot.child("name").getValue().toString();
-        // stemail = dataSnapshot.child("email").getValue().toString();
-        //System.out.println("MANE : " + stname);
-        // }
-        //@Override
-        //public void onCancelled(@NonNull DatabaseError databaseError) {
-        //}
-        //});
+            UploadTask uploadTask = riversRef.putFile(file);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUri = taskSnapshot.getDownloadUrl();
+                    String photoUri = String.valueOf(downloadUri);
+                    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("users");
 
-        UploadTask uploadTask = riversRef.putFile(file);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            //  @SuppressWarnings("VisibleForTests")
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Uri downloadUri = taskSnapshot.getDownloadUrl();
-                String photoUri = String.valueOf(downloadUri);
-                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("users");
+                    Map<String, Object> profile = new HashMap<>();
+                    profile.put("photo", photoUri);
+                    myRef.child(stUid).updateChildren(profile);
 
-                Map<String, Object> profile = new HashMap<>();
-                //  profile.put("name", stname);
-                // profile.put("email", stemail);
-                profile.put("photo", photoUri);
-                myRef.child(stUid).updateChildren(profile);
-
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String s = dataSnapshot.getValue().toString();
-                        if (dataSnapshot != null) {
-                            Toast.makeText(context, "onDataChange", Toast.LENGTH_SHORT).show();
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String s = dataSnapshot.getValue().toString();
+                            if (dataSnapshot != null) {
+                                Toast.makeText(context, "onDataChange", Toast.LENGTH_SHORT).show();
+                            } else
+                                return;
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-            }
-        });
-
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            return;
+                        }
+                    });
+                }
+            });
+        }
     }
 
     //현재 사용자 확인
@@ -222,28 +194,54 @@ public class M_Account extends AppCompatActivity {
             UserImage.setImageResource(R.drawable.account);
             Onuser.setVisibility(View.GONE);
             Offuser.setVisibility(View.VISIBLE);
-        } else {
-            final FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference();
-
-            myRef.child("users").child(stUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            out.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String stName = dataSnapshot.child("name").getValue().toString();
-                    String stEmail = dataSnapshot.child("email").getValue().toString();
-                    String stPhoto = dataSnapshot.child("photo").getValue().toString();
-                    progress.setVisibility(View.VISIBLE);
-                    Glide.with(context).load(stPhoto).into(UserImage);
-                    Username.setText(stName);
-                    Useremail.setText(stEmail);
-                    progress.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                public void onClick(View v) {
+                    startActivity(new Intent(M_Account.this, Login.class));
+                    finish();
                 }
             });
+
+        } else {
+            out.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAuth.signOut();
+                    startActivity(new Intent(M_Account.this, Login.class));
+                    finish();
+                }
+            });
+            try {
+                sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+                stUid = sharedPreferences.getString("Uid", "");
+                System.out.println("userUid : " + stUid);
+
+                final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference();
+
+                myRef.child("users").child(stUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        String stName = dataSnapshot.child("name").getValue().toString();
+                        String stEmail = dataSnapshot.child("email").getValue().toString();
+                        String stPhoto = dataSnapshot.child("photo").getValue().toString();
+                        progress.setVisibility(View.VISIBLE);
+                        Glide.with(M_Account.this).load(stPhoto).into(UserImage);
+                        Username.setText(stName);
+                        Useremail.setText(stEmail);
+                        progress.setVisibility(View.GONE);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
 
         }
     }

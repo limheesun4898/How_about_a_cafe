@@ -2,6 +2,8 @@ package com.example.user.how_about_a_cafe;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -40,10 +42,10 @@ public class MenuList extends AppCompatActivity {
     private static final String PREFS_NAME = "FILE_PREFERENCES";
     private static final String FAVORITES = "ITEM_FAVORITE";
     private int img;
-    private ImageButton actionButton;
     private TextView cafe_title;
     private ExpandableListView listView;
-    private ImageView image;
+    private ImageView image, menulist_background;
+    private ImageButton actionButton;
     private String url;
     private myGroup side;
     private myGroup drink;
@@ -62,27 +64,29 @@ public class MenuList extends AppCompatActivity {
         img = intent.getIntExtra("img", 0);
         data = item.getCafe_name();
 
-        final ArrayList<myGroup> DataList = new ArrayList<myGroup>();
+        final ArrayList<myGroup> DataList = new ArrayList<>();
         listView = (ExpandableListView) findViewById(R.id.expanded_menu);
-        image = (ImageView) findViewById(R.id.childImage);
-        Button cal_btn = (Button) findViewById(R.id.cal_btn);
         actionButton = findViewById(R.id.favorite_button);
+        image = (ImageView) findViewById(R.id.childImage);
+        menulist_background = findViewById(R.id.menulist_background);
+        Button cal_btn = (Button) findViewById(R.id.cal_btn);
 
         cafe_title = findViewById(R.id.cafe_name_tittle);
         cafe_title.setText(data);
 
+        //Glide.with(getApplicationContext()).load(getDrawable(R.drawable.testback)).into(menulist_background);
+
         Toolbar mytoolbar = findViewById(R.id.mytoolbar);
         setSupportActionBar(mytoolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.backspace);
 
         SharedPreferences preferences = getApplicationContext().getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         final String json = preferences.getString(FAVORITES, null);
-
-
         if (json != null && json.contains(data)) {
             actionButton.setImageResource(R.drawable.ic_favorite_black_24dp);
         } else actionButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,18 +224,18 @@ public class MenuList extends AppCompatActivity {
         });
     }
 
-
     private void addFavo(String json, ImageButton actionButton, int img, String data, String url) {
         ListItem item = new ListItem(img, data, url); // pasang objek yang mau ditambahin ke recyclerview
 
-        /* ngecek apakah itemnya udeh ada di favorit ape belum */
         if (json != null && json.contains(data)) { // andaikata udah ada
+            actionButton.setEnabled(true);
             actionButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
             Toast.makeText(getApplicationContext(), "즐겨찾기 취소", Toast.LENGTH_SHORT).show();
             SharedPref sharedPref = new SharedPref();
             int position = sharedPref.setIndex(getApplicationContext(), data);
             sharedPref.removeFavorite(getApplicationContext(), position); // maka metodenya adalah remove item
             sharedPref.removeIndex(getApplicationContext(), data); // nah ini remove string single nya buat acuan posisi
+            actionButton.setEnabled(false);
 
         } else {
             actionButton.setImageResource(R.drawable.ic_favorite_black_24dp);
@@ -240,6 +244,7 @@ public class MenuList extends AppCompatActivity {
             sharedPref.addIndex(getApplicationContext(), data);
 
             Toast.makeText(getApplicationContext(), "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
+            actionButton.setEnabled(false);
         }
     }
 
@@ -253,11 +258,14 @@ public class MenuList extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.home:
+                onBackPressed();
+                break;
+
             case R.id.evnet:
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
                 break;
-
             case R.id.review_btn:
                 Intent intent1 = new Intent(MenuList.this, ListReview.class);
                 intent1.putExtra("cafe_name", data);
@@ -267,7 +275,6 @@ public class MenuList extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onBackPressed() {

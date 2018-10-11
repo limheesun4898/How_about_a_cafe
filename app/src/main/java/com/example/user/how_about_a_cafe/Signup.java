@@ -61,8 +61,10 @@ import java.io.IOException;
 import java.sql.Struct;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -70,28 +72,36 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mfirebaseAuth;
     DatabaseReference myRef;
-    String Uname;
     String Uemail;
+    String stUid;
 
-    private EditText loginsingup_name, loginsignup_email, loginsignup_password;
+    private EditText loginsignup_email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        loginsingup_name = findViewById(R.id.loginsignup_name);
+
         loginsignup_email = findViewById(R.id.loginsignup_email);
-        loginsignup_password = findViewById(R.id.loginsignup_password);
+
+        try {
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);
+            stUid = sharedPreferences.getString("Uid", "");
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            myRef = database.getReference("users");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
 
         findViewById(R.id.Signup_loginsignupbutton).setOnClickListener(this);
 
         mfirebaseAuth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("users");
-
     }
 
-    public void Singup(final String name, final String email, String password) {
+    public void Singup(final String email, String password) {
         mfirebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -99,9 +109,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
                         if (!task.isSuccessful()) {
                             try {
                                 throw task.getException();
-                            } catch (FirebaseAuthWeakPasswordException e) {
-                                Toast.makeText(Signup.this, "비밀번호가 간단해요..", Toast.LENGTH_SHORT).show();
-                            } catch (FirebaseAuthInvalidCredentialsException e) {
+                            }catch (FirebaseAuthInvalidCredentialsException e) {
                                 Toast.makeText(Signup.this, "email 형식에 맞지 않습니다.", Toast.LENGTH_SHORT).show();
                             } catch (FirebaseAuthUserCollisionException e) {
                                 Toast.makeText(Signup.this, "이미존재하는 email 입니다.", Toast.LENGTH_SHORT).show();
@@ -111,18 +119,18 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
                         } else{
                             FirebaseUser user = mfirebaseAuth.getCurrentUser();
                             if (user != null) {
-                                Uname = loginsingup_name.getText().toString();
                                 Uemail = loginsignup_email.getText().toString();
-                                Hashtable<String, String> profile = new Hashtable<String, String>();
-                                profile.put("name", Uname);
-                                profile.put("email", Uemail);
-                                profile.put("photo", "https://firebasestorage.googleapis.com/v0/b/how-about-a-cafe.appspot.com/o/users%2Faccount.png?alt=media&token=49a1251d-650a-492d-8a22-bba9f4b7144e");
-                                myRef.child(user.getUid()).setValue(profile);
-                                System.out.println("UserUid : " + user.getUid());
-                            }
 
-                            Toast.makeText(Signup.this, "이메일 회원가입에 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(Signup.this, Login.class));
+                                final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference myRef = database.getReference("users");
+
+                                Map<String, Object> profile = new HashMap<>();
+                                profile.put("email", Uemail);
+                                myRef.child(stUid).updateChildren(profile);
+
+                            }
+                            Toast.makeText(Signup.this, " 페이스북 로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(Signup.this, MainActivity.class));
                             finish();
                         }
 
@@ -135,10 +143,10 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.Signup_loginsignupbutton:
-                if (loginsingup_name.getText().toString().isEmpty() || loginsignup_email.getText().toString().isEmpty() || loginsignup_password.getText().toString().isEmpty()){
+                if (loginsignup_email.getText().toString().isEmpty() ){
                     Toast.makeText(this, "빈칸을 채워주세요 :)", Toast.LENGTH_SHORT).show();
                 } else {
-                    Singup(loginsingup_name.getText().toString(), loginsignup_email.getText().toString(), loginsignup_password.getText().toString());
+                    Singup(loginsignup_email.getText().toString(), "asdf123!");
                 }
                 break;
         }

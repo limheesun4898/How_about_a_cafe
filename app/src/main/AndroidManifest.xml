@@ -79,12 +79,10 @@
             android:name=".ListReview"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".FavoriteList"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".MyReview"
             android:theme="@style/AppTheme" />
-        <activity android:name=".EditActivity"></activity>
+        <activity android:name=".EditActivity" />
+        <activity android:name=".Favorite" />
     </application>
 
 </manifest>

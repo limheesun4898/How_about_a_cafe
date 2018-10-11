@@ -1,9 +1,8 @@
 package com.example.user.how_about_a_cafe;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -13,26 +12,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FavoriteList extends AppCompatActivity {
-
+public class Favorite extends AppCompatActivity {
     private List<ListItem> itemList;
     private MyRecyclerViewAdapter adapter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_naviagator);
+        setContentView(R.layout.activity_favorite);
 
-        setTitle("즐겨찾기");
 
-        RecyclerView recyclerView = findViewById(R.id.main_recyclerview);
+        RecyclerView recyclerView = findViewById(R.id.favorite_recyclerview);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
         LinearLayoutMargin layoutMargin = new LinearLayoutMargin(20);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(layoutMargin);
-
         setupEmpty();
-
         setItem(recyclerView);
     }
 

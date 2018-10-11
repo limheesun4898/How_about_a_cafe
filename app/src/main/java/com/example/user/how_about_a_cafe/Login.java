@@ -65,12 +65,10 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         setContentView(R.layout.activity_login);
 
         findViewById(R.id.GoogleLoginbtn).setOnClickListener(this);
-        findViewById(R.id.Signupbtn_Login).setOnClickListener(this);
-        findViewById(R.id.LoginBtn_Login).setOnClickListener(this);
+
         findViewById(R.id.gusetlogin).setOnClickListener(this);
 
-        Login_email = findViewById(R.id.Login_email);
-        Login_password = findViewById(R.id.Login_password);
+
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -82,7 +80,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
                     SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("Uid", user.getUid());
@@ -150,7 +147,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         if (!task.isSuccessful()) {
                             Toast.makeText(Login.this, "인증 실패", Toast.LENGTH_SHORT).show();
                         } else {
-
                             //구글 로그인 프로필 DB 저장
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
                             name = user.getDisplayName();
@@ -160,7 +156,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                             Hashtable<String, String> profile = new Hashtable<String, String>();
                             profile.put("name", name);
                             profile.put("email", email);
-                            profile.put("photo", photoUrl);
+                            profile.put("photo", "https://firebasestorage.googleapis.com/v0/b/how-about-a-cafe.appspot.com/o/users%2Faccount.png?alt=media&token=49a1251d-650a-492d-8a22-bba9f4b7144e");
                             myRef.child(user.getUid()).setValue(profile);
 
                             startActivity(new Intent(Login.this, MainActivity.class));
@@ -185,7 +181,12 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
                             name = user.getDisplayName();
 
-                            photoUrl = user.getPhotoUrl().toString();
+                            try {
+                                photoUrl = user.getPhotoUrl().toString();
+                            }catch (NullPointerException e){
+                                photoUrl = "https://firebasestorage.googleapis.com/v0/b/how-about-a-cafe.appspot.com/o/users%2Faccount.png?alt=media&token=49a1251d-650a-492d-8a22-bba9f4b7144e";
+                            }
+
                             //DB에 데이터 저장
                             Hashtable<String, String> profile = new Hashtable<String, String>();
                             profile.put("name", name);
@@ -272,19 +273,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
                 break;
-            case R.id.Signupbtn_Login:
-                Intent intent = new Intent(this, Signup.class);
-                startActivity(intent);
-                break;
-            case R.id.LoginBtn_Login:
-                String email = Login_email.getText().toString();
-                String password = Login_password.getText().toString();
-                if (email.isEmpty() || password.isEmpty()){
-                    Toast.makeText(this, "빈칸을 채워주세요 :)", Toast.LENGTH_SHORT).show();
-                } else {
-                    clickSignIn(email, password);
-                }
-                break;
+
             case R.id.gusetlogin:
                 Intent intent1 = new Intent(this, MainActivity.class);
                 startActivity(intent1);
