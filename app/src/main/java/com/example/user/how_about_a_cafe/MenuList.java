@@ -44,7 +44,7 @@ public class MenuList extends AppCompatActivity {
     private int img;
     private TextView cafe_title;
     private ExpandableListView listView;
-    private ImageView image, menulist_background;
+    private ImageView image;
     private ImageButton actionButton;
     private String url;
     private myGroup side;
@@ -68,13 +68,10 @@ public class MenuList extends AppCompatActivity {
         listView = (ExpandableListView) findViewById(R.id.expanded_menu);
         actionButton = findViewById(R.id.favorite_button);
         image = (ImageView) findViewById(R.id.childImage);
-        menulist_background = findViewById(R.id.menulist_background);
         Button cal_btn = (Button) findViewById(R.id.cal_btn);
 
         cafe_title = findViewById(R.id.cafe_name_tittle);
         cafe_title.setText(data);
-
-        //Glide.with(getApplicationContext()).load(getDrawable(R.drawable.testback)).into(menulist_background);
 
         Toolbar mytoolbar = findViewById(R.id.mytoolbar);
         setSupportActionBar(mytoolbar);

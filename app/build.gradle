@@ -48,5 +48,5 @@ dependencies {
     implementation 'com.github.thekhaeng:recycler-view-margin-decoration:1.0.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.commit451:PhotoView:1.2.4'
-}
+} // 테스트
 apply plugin: 'com.google.gms.google-services'

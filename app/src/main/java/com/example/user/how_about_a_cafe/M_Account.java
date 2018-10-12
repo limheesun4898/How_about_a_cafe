@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -47,17 +46,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +77,6 @@ public class M_Account extends AppCompatActivity {
     String stUid;
     LinearLayout Onuser, Offuser;
     Button out;
-    String stphoto, stname, stemail;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -231,7 +223,6 @@ public class M_Account extends AppCompatActivity {
                         Username.setText(stName);
                         Useremail.setText(stEmail);
                         progress.setVisibility(View.GONE);
-
                     }
 
                     @Override

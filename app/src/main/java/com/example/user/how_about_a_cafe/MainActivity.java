@@ -128,7 +128,6 @@ public class MainActivity extends AppCompatActivity
         if (user == null) {
             Yeslogin.setVisibility(View.GONE);
             Nologin.setVisibility(View.VISIBLE);
-
         } else {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference();
