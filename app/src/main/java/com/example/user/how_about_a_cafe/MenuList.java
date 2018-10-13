@@ -45,7 +45,7 @@ public class MenuList extends AppCompatActivity {
     private TextView cafe_title;
     private ExpandableListView listView;
     private ImageView image;
-    private ImageButton actionButton;
+    private ImageButton actionButton,review_btn,event,backspace;
     private String url;
     private myGroup side;
     private myGroup drink;
@@ -69,6 +69,9 @@ public class MenuList extends AppCompatActivity {
         actionButton = findViewById(R.id.favorite_button);
         image = (ImageView) findViewById(R.id.childImage);
         Button cal_btn = (Button) findViewById(R.id.cal_btn);
+        review_btn = findViewById(R.id.review);
+        event = findViewById(R.id.event);
+        backspace = findViewById(R.id.backspace);
 
         cafe_title = findViewById(R.id.cafe_name_tittle);
         cafe_title.setText(data);
@@ -76,8 +79,6 @@ public class MenuList extends AppCompatActivity {
         Toolbar mytoolbar = findViewById(R.id.mytoolbar);
         setSupportActionBar(mytoolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.backspace);
 
         SharedPreferences preferences = getApplicationContext().getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         final String json = preferences.getString(FAVORITES, null);
@@ -89,6 +90,29 @@ public class MenuList extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 addFavo(json, actionButton, img, data, url);
+            }
+        });
+
+        review_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(MenuList.this, ListReview.class);
+                intent1.putExtra("cafe_name", data);
+                startActivity(intent1);
+            }
+        });
+        event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+            }
+        });
+        backspace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MenuList.this, MainActivity.class));
+                finish();
             }
         });
 
@@ -243,34 +267,6 @@ public class MenuList extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
             actionButton.setEnabled(false);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.home:
-                onBackPressed();
-                break;
-
-            case R.id.evnet:
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
-                break;
-            case R.id.review_btn:
-                Intent intent1 = new Intent(MenuList.this, ListReview.class);
-                intent1.putExtra("cafe_name", data);
-                startActivity(intent1);
-                break;
-
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

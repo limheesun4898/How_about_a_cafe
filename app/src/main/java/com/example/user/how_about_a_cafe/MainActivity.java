@@ -48,14 +48,13 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser user = mFirebaseAuth.getCurrentUser();
     private TextView Uname;
-    private TextView Uemail;
     private CircleImageView Uiamge;
     private Context mContext;
     private List<ListItem> itemList = new ArrayList<>();
     private MyRecyclerViewAdapter adapter;
     private DatabaseReference myRef;
     final Context context = this;
-    private String stUid;
+    private String stUid,GstLogin;
     LinearLayout Nologin, Yeslogin;
 
     @Override
@@ -90,7 +89,6 @@ public class MainActivity extends AppCompatActivity
 
         View v = navigationView.getHeaderView(0);
         Uname = v.findViewById(R.id.Username);
-        Uemail = v.findViewById(R.id.Useremail);
         Uiamge = v.findViewById(R.id.UserImage);
         Nologin = v.findViewById(R.id.Nologin);
         Yeslogin = v.findViewById(R.id.Yeslogin);
@@ -143,7 +141,6 @@ public class MainActivity extends AppCompatActivity
                         System.out.println("LOGIN : " + stemail);
 
                         Uname.setText(stname);
-                        Uemail.setText(stemail);
                         Glide.with(getApplicationContext()).load(stPhoto).into(Uiamge);
                     } catch (NullPointerException e) {
                         e.printStackTrace();

@@ -251,8 +251,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
                 break;
-
             case R.id.gusetlogin:
+                SharedPreferences sharedPreferences = getSharedPreferences("GuestLogin", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("Uid", "111");
+                editor.apply();
                 Intent intent1 = new Intent(this, MainActivity.class);
                 startActivity(intent1);
                 finish();

@@ -76,7 +76,7 @@ public class M_Account extends AppCompatActivity {
     Uri albumURI;
     String stUid;
     LinearLayout Onuser, Offuser;
-    Button out;
+    Button out1,out2;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -95,9 +95,10 @@ public class M_Account extends AppCompatActivity {
         UserImage = findViewById(R.id.UserImage);
         Onuser = findViewById(R.id.Onuser);
         Offuser = findViewById(R.id.Offuser);
-        out = findViewById(R.id.out);
-        progress = findViewById(R.id.progress);
+        out1 = findViewById(R.id.out1);
+        out2 = findViewById(R.id.out2);
 
+        progress = findViewById(R.id.progress);
     }
 
     public void iv_view(View v) {
@@ -183,10 +184,9 @@ public class M_Account extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         if (user == null) {
-            UserImage.setImageResource(R.drawable.account);
             Onuser.setVisibility(View.GONE);
             Offuser.setVisibility(View.VISIBLE);
-            out.setOnClickListener(new View.OnClickListener() {
+            out2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(M_Account.this, Login.class));
@@ -195,7 +195,7 @@ public class M_Account extends AppCompatActivity {
             });
 
         } else {
-            out.setOnClickListener(new View.OnClickListener() {
+            out1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mAuth.signOut();

@@ -9,61 +9,79 @@
     <LinearLayout
         android:id="@+id/Onuser"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="500dp"
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="300dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="center"
+                android:src="@drawable/account_background"/>
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/UserImage"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
                 android:paddingTop="@dimen/nav_header_vertical_spacing"
                 android:onClick="iv_view"
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 />
             <ProgressBar
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:layout_marginTop="70dp"
                 android:id="@+id/progress"
-
                 />
         </RelativeLayout>
         <TextView
             android:id="@+id/Username"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:layout_height="50dp"
+            android:gravity="center"
             android:text="이름"
+            android:textSize="20sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             />
 
         <TextView
             android:id="@+id/Useremail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:layout_height="50dp"
+            android:gravity="center"
             android:text="이메일"
+            android:textSize="20sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        <Button
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="logout"
+            android:id="@+id/out1"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/Offuser"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:text="로그인을 하여주세요."/>
+        <Button
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="logout"
+            android:id="@+id/out2"/>
     </LinearLayout>
 
-    <Button
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="logout"
-        android:id="@+id/out"/>
 </LinearLayout>
