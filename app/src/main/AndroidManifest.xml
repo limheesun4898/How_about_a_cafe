@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.user.how_about_a_cafe">
-//테스트
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -70,7 +70,6 @@
             android:label="@string/title_activity_navigation__drawer"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".M_Account" />
-        <activity android:name=".Signup" />
         <activity android:name=".Google_map" />
         <activity android:name=".MenuList" />
         <activity android:name=".WriteReview" />
