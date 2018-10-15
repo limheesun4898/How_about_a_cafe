@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -35,6 +36,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -79,6 +82,8 @@ public class Google_map extends AppCompatActivity implements OnMapReadyCallback,
             .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
 
     List<Marker> previous_marker = null;
+    double mLatitude ;   //위도
+    double mLongitude;  //경도
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -401,8 +406,8 @@ public class Google_map extends AppCompatActivity implements OnMapReadyCallback,
         markerOptions.draggable(true);
 
         //구글맵의 디폴트 현재 위치는 파란색 동그라미로 표시
-        //마커를 원하는 이미지로 변경하여 현재 위치 표시하도록 수정 fix - 2017. 11.27
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
+        //마커를 원하는 이미지로 변경하여 현재 위치 표시하도록 수정
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.map_marker));
 
         currentMarker = mGoogleMap.addMarker(markerOptions);
 
@@ -440,7 +445,6 @@ public class Google_map extends AppCompatActivity implements OnMapReadyCallback,
         mGoogleMap.moveCamera(cameraUpdate);
 
     }
-
 
     //여기부터는 런타임 퍼미션 처리을 위한 메소드들
     @TargetApi(Build.VERSION_CODES.M)
@@ -612,17 +616,17 @@ public class Google_map extends AppCompatActivity implements OnMapReadyCallback,
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                for(noman.googleplaces.Place place : places) {
-                    LatLng latLng
+                for(final noman.googleplaces.Place place : places) {
+                    final LatLng latLng
                             = new LatLng(place.getLatitude()
                             , place.getLongitude());
 
                     String markerSnippet = getCurrentAddress(latLng);
-                    MarkerOptions markerOptions = new MarkerOptions();
+                    final MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latLng);
                     markerOptions.title(place.getName());
                     markerOptions.snippet(markerSnippet);
-                    Marker item = mGoogleMap.addMarker(markerOptions);
+                    final Marker item = mGoogleMap.addMarker(markerOptions);
                     previous_marker.add(item);
 
                 }
@@ -631,7 +635,17 @@ public class Google_map extends AppCompatActivity implements OnMapReadyCallback,
                 hashSet.addAll(previous_marker);
                 previous_marker.clear();
                 previous_marker.addAll(hashSet);
+            }
+        });
+        mGoogleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                CameraPosition cameraPosition = mGoogleMap.getCameraPosition();
+                if(cameraPosition.zoom > 14.0) {
+                    //표시 ㄴㄴ
+                } else {
 
+                }
             }
         });
     }
@@ -646,17 +660,28 @@ public class Google_map extends AppCompatActivity implements OnMapReadyCallback,
         mGoogleMap.clear();//지도 클리어
         if (previous_marker != null)
             previous_marker.clear();//지역정보 마커 클리어
+
+        mLatitude = location.latitude;
+        mLongitude = location.longitude;
+        LatLng position = new LatLng(mLatitude,mLongitude);
+
+        mGoogleMap.addCircle(new CircleOptions()
+                .center(position)
+                .radius(500)
+                .strokeColor(Color.RED)
+                .fillColor(0x220000FF)
+                .strokeWidth(5));
+
         new NRPlaces.Builder()
                 .listener(Google_map.this)
                 .key("AIzaSyBoZ07H62GvZOXVKaj3VYxu1mz6p0mFYBw")
                 .latlng(location.latitude, location.longitude)//현재 위치
-                .radius(2000) //500 미터 내에서 검색
+                .radius(500) //500 미터 내에서 검색
                 .type(PlaceType.CAFE)
                 .language("ko","KR")
                 .build()
                 .execute();
     }
-
 }
 //http://webnautes.tistory.com/1080?category=618190
 //https://console.developers.google.com/apis/credentials?project=secret-footing-214916&hl=ko
