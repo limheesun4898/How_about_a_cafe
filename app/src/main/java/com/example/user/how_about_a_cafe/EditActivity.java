@@ -64,6 +64,7 @@ public class EditActivity extends AppCompatActivity {
     private String text;
     private int selection;
     private String data;
+    private ImageView send_btn;
 
     long now = System.currentTimeMillis();
     Date date = new Date(now);
@@ -77,9 +78,9 @@ public class EditActivity extends AppCompatActivity {
 
         textNum = (TextView) findViewById(R.id.edit_review_textNum);
         editReview = (EditText) findViewById(R.id.edit_review_edit);
-        spinner = (Spinner) findViewById(R.id.edit_spinner);
         ratingBar = (RatingBar) findViewById(R.id.edit_ratingBar);
         photo_select = (ImageView) findViewById(R.id.edit_review_photo_select);
+        send_btn = (ImageView) findViewById(R.id.edit_review_send);
 
         Toolbar mytoolbar = findViewById(R.id.edit_review_toolbar);
         setSupportActionBar(mytoolbar);
@@ -113,7 +114,7 @@ public class EditActivity extends AppCompatActivity {
         firebaseDatabase.child("UserReview").child(uid).child(data).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                MyReviewItem item = dataSnapshot.getValue(MyReviewItem.class);
+                ReviewItem item = dataSnapshot.getValue(ReviewItem.class);
 
                 if (item.isIsimage())
                     downloadUrl = Uri.parse(item.getUrl());
@@ -125,7 +126,6 @@ public class EditActivity extends AppCompatActivity {
                 menu = item.getMenu();
                 rating = Float.parseFloat(item.getRating());
                 text = item.getReview();
-                selection = Integer.parseInt(item.getSelection());
                 isimage = item.isIsimage();
 
                 setData();
@@ -137,76 +137,21 @@ public class EditActivity extends AppCompatActivity {
             }
         });
 
-        list_data = new ArrayList<>();
-        firebaseDatabase.child("스타벅스").child("사이드메뉴").addValueEventListener(new ValueEventListener() {
+        send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    list_data.add(snapshot.getKey());
+            public void onClick(View view) {
+                if (rating == 0.0 || text_null)
+                    Toast.makeText(EditActivity.this, "별점과 리뷰을 작성해주세요", Toast.LENGTH_SHORT).show();
+                else {
+                    Toast.makeText(EditActivity.this, "리뷰가 수정되었습니다", Toast.LENGTH_SHORT).show();
+                    ReviewItem a = new ReviewItem(editReview.getText().toString(), String.valueOf(rating), String.valueOf(downloadUrl), formatDate, name, profile, menu, cafe_name, String.valueOf(selection), isimage);
+                    FirebaseDatabase.getInstance().getReference().child("UserReview").child(uid).child(data).setValue(a);//formatData는 작성한 시간
+                    FirebaseDatabase.getInstance().getReference().child("Review").child(cafe_name).child(menu).child(data).setValue(a);
+                    Intent intent = new Intent(EditActivity.this, MyReview.class);
+                    startActivity(intent);
+                    finish();
 
                 }
-                spinnerAdapter = new SpinnerAdapter(EditActivity.this, list_data);
-                spinner.setAdapter(spinnerAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        firebaseDatabase.child("스타벅스").child("음료").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    list_data.add(snapshot.getKey());
-
-                    if (snapshot.getKey().equals("SIZE")) {
-                        list_data.remove("SIZE");
-                        list_data.remove(snapshot.getValue() + "원");
-                    }
-
-                    if (snapshot.getKey().equals("SIZE2")) {
-                        list_data.remove("SIZE2");
-                        list_data.remove(snapshot.getValue() + "원");
-                    }
-
-
-                    if (snapshot.getKey().equals("ICE")) {
-                        list_data.remove("ICE");
-                        list_data.remove(snapshot.getValue() + "원");
-                    }
-
-                    if (snapshot.getKey().equals("ICE2")) {
-                        list_data.remove("ICE2");
-                        list_data.remove(snapshot.getValue() + "원");
-                    }
-
-                    if (snapshot.getKey().equals("SIZE_CNT")) {
-                        list_data.remove("SIZE_CNT");
-                        list_data.remove(snapshot.getValue() + "원");
-                    }
-
-                }
-                spinnerAdapter = new SpinnerAdapter(EditActivity.this, list_data);
-                spinner.setAdapter(spinnerAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                menu = spinnerAdapter.getItem(i).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
@@ -303,7 +248,6 @@ public class EditActivity extends AppCompatActivity {
     public void setData() {
         editReview.setText(text);
         ratingBar.setRating(rating);
-        spinner.setSelection(selection);
     }
 
 
@@ -316,31 +260,4 @@ public class EditActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.write_review, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(android.view.MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.write_review_send:    //리뷰 파이어베이스에 저장해주는 부붑
-                if (rating == 0.0 || text_null)
-                    Toast.makeText(this, "별점과 리뷰을 작성해주세요", Toast.LENGTH_SHORT).show();
-                else {
-                    Toast.makeText(EditActivity.this, "리뷰가 수정되었습니다", Toast.LENGTH_SHORT).show();
-                    ReviewItem a = new ReviewItem(editReview.getText().toString(), String.valueOf(rating), String.valueOf(downloadUrl), formatDate, name, profile, menu, cafe_name, String.valueOf(selection), isimage);
-                    MyReviewItem b = new MyReviewItem(editReview.getText().toString(), String.valueOf(rating), String.valueOf(downloadUrl), formatDate, name, profile, menu, cafe_name, String.valueOf(selection), isimage);     //작성한 리뷰와 별점이 파이어베이스에 올라감
-                    FirebaseDatabase.getInstance().getReference().child("UserReview").child(uid).child(data).setValue(b);//formatData는 작성한 시간
-                    FirebaseDatabase.getInstance().getReference().child("Review").child(cafe_name).child(menu).child(data).setValue(a);
-                    Intent intent = new Intent(EditActivity.this, MyReview.class);
-                    startActivity(intent);
-                    finish();
-                    return true;
-
-
-                }
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

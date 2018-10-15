@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,8 @@ public class MenuOnClickActivity extends AppCompatActivity {
     public static ArrayList<ReviewItem> mItems = new ArrayList<>();
     public static DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private RatingBar ratingBar;
+    private TextView rating_ave;
     private String cafe_name;
     private List<String> data;
     private String menu;
@@ -57,6 +60,8 @@ public class MenuOnClickActivity extends AppCompatActivity {
     private int SIZECNT = 0;
     private String imageurl;
     private String category;
+    private float average;
+    private int review_cnt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +76,8 @@ public class MenuOnClickActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.list_review_recyclerview);
         null_text = (TextView) findViewById(R.id.list_review_null_text);
+        ratingBar = (RatingBar) findViewById(R.id.rating_average);
+        rating_ave = (TextView) findViewById(R.id.rating_average_text);
 
         Toolbar mytoolbar = findViewById(R.id.menu_on_click_toolbar);
         setSupportActionBar(mytoolbar);
@@ -84,8 +91,58 @@ public class MenuOnClickActivity extends AppCompatActivity {
         data = new ArrayList<>();
         mItems.clear();
 
-        addData();
-        calData();
+        if (firebaseDatabase.child("Review").getKey() != null) {
+            firebaseDatabase.child("Review").child(cafe_name).child(menu).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    ReviewItem item = dataSnapshot.getValue(ReviewItem.class);
+
+                    if (item.getReview() != null) {
+                        review_cnt += 1;
+                        average += Float.parseFloat(item.getRating()) / review_cnt;
+
+                        ratingBar.setRating(average);
+                        rating_ave.setText(String.valueOf(average));
+                    }
+
+                    if (item.isIsimage()) {
+                        ReviewItem a = new ReviewItem(item.getReview(), item.getRating(), item.getUrl(), item.getFormatDate(), item.getName(), item.getProfile_image(), item.getMenu(), item.getCafe_name(), item.getSelection(), item.isIsimage());
+                        mItems.add(a);
+                        recycleradapter.notifyDataSetChanged();
+
+                    } else {
+                        ReviewItem a = new ReviewItem(item.getReview(), item.getRating(), item.getFormatDate(), item.getName(), item.getProfile_image(), item.getMenu(), item.getCafe_name(), item.getSelection(), item.isIsimage());
+                        mItems.add(a);
+                        recycleradapter.notifyDataSetChanged();
+                    }
+                    addData();
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    finish();
+                    startActivity(getIntent());
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            calData();
+
+        }
     }
 
     public void calData() {
@@ -476,6 +533,7 @@ public class MenuOnClickActivity extends AppCompatActivity {
                 if (user != null) {
                     Intent intent = new Intent(MenuOnClickActivity.this, WriteReview.class);
                     intent.putExtra("cafe_name", cafe_name);
+                    intent.putExtra("menu", menu);
                     startActivity(intent);
                 } else
                     Toast.makeText(this, "로그인 후 이용해 주세요", Toast.LENGTH_SHORT).show();

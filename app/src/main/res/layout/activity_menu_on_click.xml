@@ -26,15 +26,19 @@
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
-    <RelativeLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <ScrollView
             android:id="@+id/scroll"
-            android:layout_above="@id/menu_on_click_ok"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_above="@id/menu_on_click_ok"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,11 +59,27 @@
                     android:layout_marginBottom="12sp"
                     android:textSize="15sp" />
 
-                <RatingBar
-                    style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <RatingBar
+                        android:id="@+id/rating_average"
+                        style="@style/Base.Widget.AppCompat.RatingBar.Indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:id="@+id/rating_average_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="18dp"
+                        android:textSize="24sp" />
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -259,6 +279,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_margin="30dp"
                         android:text="리뷰가 없습니다"
                         android:textColor="#000000" />
                 </FrameLayout>
@@ -271,7 +292,7 @@
         <Button
             android:id="@+id/menu_on_click_ok"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="100dp"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -281,7 +302,7 @@
             android:textSize="18sp" />
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 </LinearLayout>
