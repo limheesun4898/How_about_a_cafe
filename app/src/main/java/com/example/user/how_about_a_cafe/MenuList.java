@@ -238,8 +238,12 @@ public class MenuList extends AppCompatActivity {
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-                CustomDialog customDialog = new CustomDialog(MenuList.this);
-                customDialog.callFunction(DataList.get(i).child.get(i1), data, String.valueOf(i), DataList.get(i).childImage.get(i1));
+                Intent intent1 = new Intent(MenuList.this, MenuOnClickActivity.class);
+                intent1.putExtra("menu_name", DataList.get(i).child.get(i1));
+                intent1.putExtra("cafe_name", data);
+                intent1.putExtra("imageurl", String.valueOf(DataList.get(i).childImage.get(i1)));
+                intent1.putExtra("category", String.valueOf(i));
+                startActivity(intent1);
                 return true;
             }
         });
