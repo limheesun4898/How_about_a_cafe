@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/write_review_btn"
-        android:icon="@drawable/write_review"
+        android:icon="@drawable/review"
         android:title="writereview"
         app:showAsAction="always"/>
 

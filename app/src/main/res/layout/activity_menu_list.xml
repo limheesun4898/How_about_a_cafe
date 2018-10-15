@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".MenuList">
 
@@ -18,16 +17,16 @@
             android:id="@+id/backspace"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/backspace"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginRight="20dp"
+            android:background="@drawable/backspace" />
 
         <TextView
             android:id="@+id/cafe_name_tittle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="카페이름"
-            android:textSize="20dp"
-            android:textColor="#f1eeee"/>
+            android:textColor="#f1eeee"
+            android:textSize="20dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,21 +38,16 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/ic_favorite_border_black_24dp"
-                android:scaleType="fitXY"
-                />
-            <ImageButton
-                android:id="@+id/review"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/review"
-                android:layout_marginLeft="15dp"/>
+                android:scaleType="fitXY" />
+
+
             <ImageButton
                 android:id="@+id/event"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/event"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:background="@drawable/event" />
 
         </LinearLayout>
 
@@ -62,26 +56,29 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <ExpandableListView
+            android:id="@+id/expanded_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/cal_btn"
+            android:childDivider="@drawable/line"
+            android:divider="@drawable/line"
+            android:dividerHeight="1dp"
+            android:groupIndicator="@null" />
 
-            <ExpandableListView
-                android:id="@+id/expanded_menu"
-                android:layout_width="match_parent"
-                android:layout_height="450sp"
-                android:childDivider="@drawable/line"
-                android:divider="@drawable/line"
-                android:dividerHeight="1dp"
-                android:groupIndicator="@null"/>
+        <Button
+            android:id="@+id/cal_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:layout_margin="4sp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/spinner"
+            android:text="계산서"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
-            <Button
-                android:id="@+id/cal_btn"
-                android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/spinner"
-                android:layout_margin="4sp"
-                android:textColor="#ffffff"
-                android:text="계산서"
-                android:textStyle="bold" />
-        </RelativeLayout>
+
+
 
 </LinearLayout>

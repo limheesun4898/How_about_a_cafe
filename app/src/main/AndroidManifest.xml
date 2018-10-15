@@ -82,7 +82,6 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".EditActivity" />
         <activity android:name=".Favorite" />
-        <activity android:name=".Signup"></activity>
     </application>
 
 </manifest>

@@ -1,26 +1,49 @@
 package com.example.user.how_about_a_cafe;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class CustomDialog {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MenuOnClickActivity extends AppCompatActivity {
+    public static ArrayList<ReviewItem> mItems = new ArrayList<>();
     public static DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
-    private Context context;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String cafe_name;
+    private List<String> data;
+    private String menu;
+    private RecyclerView.Adapter recycleradapter;
+    private RecyclerView recyclerView;
+    private TextView null_text;
     private int price;
     private int total;
     private int total_2;
@@ -32,44 +55,57 @@ public class CustomDialog {
     private int iPerson_cnt = 1;
     private int total_3;
     private int SIZECNT = 0;
+    private String imageurl;
+    private String category;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_menu_on_click);
 
-    public CustomDialog(Context context) {
-        this.context = context;
+        Intent intent = getIntent();
+        menu = intent.getStringExtra("menu_name");
+        cafe_name = intent.getStringExtra("cafe_name");
+        imageurl = intent.getStringExtra("imageurl");
+        category = intent.getStringExtra("category");
+
+        recyclerView = (RecyclerView) findViewById(R.id.list_review_recyclerview);
+        null_text = (TextView) findViewById(R.id.list_review_null_text);
+
+        Toolbar mytoolbar = findViewById(R.id.menu_on_click_toolbar);
+        setSupportActionBar(mytoolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recycleradapter = new ListReviewRecyclerAdapter(mItems, MenuOnClickActivity.this);
+        recyclerView.setAdapter(recycleradapter);
+
+        data = new ArrayList<>();
+        mItems.clear();
+
+        addData();
+        calData();
     }
 
-    public void callFunction(final String menu, final String cafe, final String category, final Uri imageurl) {
+    public void calData() {
+        final ImageView menu_image = (ImageView) findViewById(R.id.menu_on_click_image);
+        final TextView menu_name = (TextView) findViewById(R.id.menu_on_click_name);
+        final TextView menu_price = (TextView) findViewById(R.id.menu_on_click_price);
+        final Button person_minus = (Button) findViewById(R.id.menu_on_click_person_minus);
+        final Button person_plus = (Button) findViewById(R.id.menu_on_click_person_plus);
+        final TextView person_cnt = (TextView) findViewById(R.id.menu_on_click_person_cnt);
+        final Button menu_minus = (Button) findViewById(R.id.menu_on_click_menu_minus);
+        final TextView menu_cnt = (TextView) findViewById(R.id.menu_on_click_menu_cnt);
+        final Button menu_plus = (Button) findViewById(R.id.menu_on_click_menu_plus);
+        final Button hot_btn = (Button) findViewById(R.id.menu_on_click_hot);
+        final Button ice_btn = (Button) findViewById(R.id.menu_on_click_ice);
+        final Button size1 = (Button) findViewById(R.id.menu_on_click_size1);
+        final Button size2 = (Button) findViewById(R.id.menu_on_click_size2);
+        final Button size3 = (Button) findViewById(R.id.menu_on_click_size3);
+        final Button ok_btn = (Button) findViewById(R.id.menu_on_click_ok);
 
-        // 커스텀 다이얼로그를 정의하기위해 Dialog클래스를 생성한다.
-        final Dialog dlg = new Dialog(context);
-
-        // 액티비티의 타이틀바를 숨긴다.
-        dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        // 커스텀 다이얼로그의 레이아웃을 설정한다.
-//        dlg.setContentView(R.layout.menu_option_dialog);
-
-        // 커스텀 다이얼로그를 노출한다.
-        dlg.show();
-
-        final ImageView menu_image = (ImageView) dlg.findViewById(R.id.menu_on_click_image);
-        final TextView menu_name = (TextView) dlg.findViewById(R.id.menu_on_click_name);
-        final TextView menu_price = (TextView) dlg.findViewById(R.id.menu_on_click_price);
-//        final Button cancel = (Button) dlg.findViewById(R.id.menu_on_click_cancle);
-        final Button person_minus = (Button) dlg.findViewById(R.id.menu_on_click_person_minus);
-        final Button person_plus = (Button) dlg.findViewById(R.id.menu_on_click_person_plus);
-        final TextView person_cnt = (TextView) dlg.findViewById(R.id.menu_on_click_person_cnt);
-        final Button menu_minus = (Button) dlg.findViewById(R.id.menu_on_click_menu_minus);
-        final TextView menu_cnt = (TextView) dlg.findViewById(R.id.menu_on_click_menu_cnt);
-        final Button menu_plus = (Button) dlg.findViewById(R.id.menu_on_click_menu_plus);
-        final Button hot_btn = (Button) dlg.findViewById(R.id.menu_on_click_hot);
-        final Button ice_btn = (Button) dlg.findViewById(R.id.menu_on_click_ice);
-        final Button size1 = (Button) dlg.findViewById(R.id.menu_on_click_size1);
-        final Button size2 = (Button) dlg.findViewById(R.id.menu_on_click_size2);
-        final Button size3 = (Button) dlg.findViewById(R.id.menu_on_click_size3);
-        final Button ok_btn = (Button) dlg.findViewById(R.id.menu_on_click_ok);
-
-        Glide.with(context).load(imageurl).into(menu_image);
+        Glide.with(MenuOnClickActivity.this).load(imageurl).into(menu_image);
         menu_name.setText(menu);
         hot_btn.setEnabled(false);
         size1.setEnabled(false);
@@ -82,11 +118,11 @@ public class CustomDialog {
         else
             person_minus.setEnabled(true);
 
-        firebaseDatabase.child(cafe).addValueEventListener(new ValueEventListener() {
+        firebaseDatabase.child(cafe_name).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (category.equals("0")) {
-                    firebaseDatabase.child(cafe).child("사이드메뉴").child(menu).addValueEventListener(new ValueEventListener() {
+                    firebaseDatabase.child(cafe_name).child("사이드메뉴").child(menu).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getValue() == null)
@@ -112,7 +148,7 @@ public class CustomDialog {
 
                         }
                     });
-                    firebaseDatabase.child(cafe).child("사이드 메뉴").child(menu).addValueEventListener(new ValueEventListener() {
+                    firebaseDatabase.child(cafe_name).child("사이드 메뉴").child(menu).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getValue() == null)
@@ -140,7 +176,7 @@ public class CustomDialog {
 
 
                 } else {
-                    firebaseDatabase.child(cafe).child("음료").child(menu).addValueEventListener(new ValueEventListener() {
+                    firebaseDatabase.child(cafe_name).child("음료").child(menu).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             String s_price = dataSnapshot.getValue().toString();
@@ -158,7 +194,7 @@ public class CustomDialog {
                     });
                 }
 
-                firebaseDatabase.child(cafe).child("음료").child("ICE").addValueEventListener(new ValueEventListener() {
+                firebaseDatabase.child(cafe_name).child("음료").child("ICE").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() == null) {
@@ -177,7 +213,7 @@ public class CustomDialog {
 
                     }
                 });
-                firebaseDatabase.child(cafe).child("음료").child("SIZE").addValueEventListener(new ValueEventListener() {
+                firebaseDatabase.child(cafe_name).child("음료").child("SIZE").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() == null)
@@ -197,7 +233,7 @@ public class CustomDialog {
 
                     }
                 });
-                firebaseDatabase.child(cafe).child("음료").child("SIZE_CNT").addValueEventListener(new ValueEventListener() {
+                firebaseDatabase.child(cafe_name).child("음료").child("SIZE_CNT").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() == null)
@@ -403,17 +439,49 @@ public class CustomDialog {
         ok_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Cal_Menu_Item item = new Cal_Menu_Item(menu, ice_cnt,String.valueOf(size_cnt), String.valueOf(total_3), String.valueOf(iPerson_cnt));
-                FirebaseDatabase.getInstance().getReference().child("user_menu").child(cafe).child(menu).setValue(item);
-                dlg.dismiss();
+                if (user != null) {
+                    Cal_Menu_Item item = new Cal_Menu_Item(menu, ice_cnt,String.valueOf(size_cnt), String.valueOf(total_3), String.valueOf(iPerson_cnt));
+                    FirebaseDatabase.getInstance().getReference().child("user_menu").child(cafe_name).child(menu).setValue(item);
+                    finish();
+                }
+                else {
+                    Toast.makeText(MenuOnClickActivity.this, "로그인 후 이용해주세요", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
+    }
 
-//        cancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                dlg.dismiss();
-//            }
-//        });
+    public void addData() {
+        if (mItems.size() == 0) {
+            null_text.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            null_text.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.list_review, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.write_review_btn:
+                if (user != null) {
+                    Intent intent = new Intent(MenuOnClickActivity.this, WriteReview.class);
+                    intent.putExtra("cafe_name", cafe_name);
+                    startActivity(intent);
+                } else
+                    Toast.makeText(this, "로그인 후 이용해 주세요", Toast.LENGTH_SHORT).show();
+
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
