@@ -53,7 +53,7 @@ import noman.googleplaces.Place;
 import noman.googleplaces.PlaceType;
 import noman.googleplaces.PlacesException;
 import noman.googleplaces.PlacesListener;
-
+//이거 살리고
 public class Google_map extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
         ,LocationListener, PlacesListener {
