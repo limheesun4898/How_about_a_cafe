@@ -19,6 +19,64 @@
             android:layout_marginTop="120sp"
             android:src="@drawable/cafe_logo" />
     </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="30sp"
+        android:layout_marginRight="30sp"
+        android:orientation="vertical">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/Login_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/mail"
+                android:hint="  Email"
+                android:maxLines="1"
+                android:inputType="textEmailAddress"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/Login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15sp"
+                android:drawableLeft="@drawable/pwd"
+                android:hint="  Password"
+                android:inputType="textPassword"
+                android:maxLines="1"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15sp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/LoginBtn_Login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#ffffffff"
+                android:text="Login" />
+
+            <Button
+                android:id="@+id/Signupbtn_Login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#ffffffff"
+                android:text="SIGN UP" />
+        </LinearLayout>
+
+
 
 
         <LinearLayout
@@ -52,4 +110,4 @@
                 android:text="guest login"/>
 
         </LinearLayout>
-</LinearLayout>
+    </LinearLayout></LinearLayout>
