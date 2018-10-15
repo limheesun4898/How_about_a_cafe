@@ -93,14 +93,6 @@ public class MenuList extends AppCompatActivity {
             }
         });
 
-//        review_btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent1 = new Intent(MenuList.this, ListReview.class);
-//                intent1.putExtra("cafe_name", data);
-//                startActivity(intent1);
-//            }
-//        });
         event.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

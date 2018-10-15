@@ -28,9 +28,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.example.user.how_about_a_cafe.MyReview.databaseReference;
 
 public class MyReviewAdapter extends RecyclerView.Adapter<MyReviewAdapter.ItemViewHolder> {
-    private List<MyReviewItem> mItems;
+    private List<ReviewItem> mItems;
     private Context context;
-    public MyReviewAdapter(List<MyReviewItem> mItems, Context context) {
+    public MyReviewAdapter(List<ReviewItem> mItems, Context context) {
         this.mItems = mItems;
         this.context = context;
     }
@@ -49,7 +49,7 @@ public class MyReviewAdapter extends RecyclerView.Adapter<MyReviewAdapter.ItemVi
     // View 의 내용을 해당 포지션의 데이터로 바꿉니다.
     @Override
     public void onBindViewHolder(final MyReviewAdapter.ItemViewHolder holder, int position) {
-        final MyReviewItem item = mItems.get(position);
+        final ReviewItem item = mItems.get(position);
 
         holder.review.setText(item.getReview());
         holder.date.setText(item.getFormatDate());
@@ -79,7 +79,7 @@ public class MyReviewAdapter extends RecyclerView.Adapter<MyReviewAdapter.ItemVi
                                     Intent intent = new Intent(context, EditActivity.class);
                                     intent.putExtra("date", item.getFormatDate());
                                     context.startActivity(intent);
-                                    Toast.makeText(context, "수저엉", Toast.LENGTH_SHORT).show();
+                                    ((Activity)context).finish();
                                     break;
 
                             }
@@ -117,7 +117,6 @@ public class MyReviewAdapter extends RecyclerView.Adapter<MyReviewAdapter.ItemVi
                                     Intent intent = new Intent(context, EditActivity.class);
                                     intent.putExtra("date", item.getFormatDate());
                                     context.startActivity(intent);
-                                    Toast.makeText(context, "수저엉", Toast.LENGTH_SHORT).show();
                                     ((Activity)context).finish();
                                     break;
                             }
@@ -130,7 +129,7 @@ public class MyReviewAdapter extends RecyclerView.Adapter<MyReviewAdapter.ItemVi
         }
     }
 
-    public void deleteAlert(final RecyclerView.ViewHolder holder, final MyReviewItem item, final boolean hasImg) {
+    public void deleteAlert(final RecyclerView.ViewHolder holder, final ReviewItem item, final boolean hasImg) {
 
         AlertDialog.Builder alert_confirm = new AlertDialog.Builder(context);
         alert_confirm.setMessage("삭제하시겠습니까?").setCancelable(false).setPositiveButton("삭제",
@@ -143,7 +142,7 @@ public class MyReviewAdapter extends RecyclerView.Adapter<MyReviewAdapter.ItemVi
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         String uid = user.getUid();
                         databaseReference.child("UserReview").child(uid).child(item.getFormatDate()).removeValue();
-                        databaseReference.child("Review").child(item.getCafe_name()).child(item.getMenu()).removeValue();
+                        databaseReference.child("Review").child(item.getCafe_name()).child(item.getMenu()).child(item.getFormatDate()).removeValue();
                         mItems.remove(holder.getAdapterPosition());
                         notifyDataSetChanged();
                     }

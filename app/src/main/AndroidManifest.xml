@@ -38,7 +38,7 @@
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyANJhtoonRCUupon4CR0jNmpg-kj8b4Dhc" />
+            android:value="AIzaSyDqHcb1_0A2ckyNg4kDP59d4kOMTz5apcU" />
 
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -82,7 +82,7 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".EditActivity" />
         <activity android:name=".Favorite" />
-        <activity android:name=".GoogleMap" />
+        <activity android:name=".MenuOnClickActivity"/>
     </application>
 
 </manifest>

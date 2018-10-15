@@ -27,7 +27,7 @@ import java.util.List;
 import static com.example.user.how_about_a_cafe.ListReview.mItems;
 
 public class MyReview extends AppCompatActivity {
-    public static ArrayList<MyReviewItem> mItems = new ArrayList<>();
+    public static ArrayList<ReviewItem> mItems = new ArrayList<>();
     public static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     public static DatabaseReference databaseReference = firebaseDatabase.getReference();
     public static StorageReference mStorage = FirebaseStorage.getInstance().getReference();
@@ -58,14 +58,14 @@ public class MyReview extends AppCompatActivity {
                 databaseReference.child("UserReview").child(uid).addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        MyReviewItem item = dataSnapshot.getValue(MyReviewItem.class);
+                        ReviewItem item = dataSnapshot.getValue(ReviewItem.class);
                         if (item.isIsimage()) {
-                            MyReviewItem a = new MyReviewItem(item.getReview(), item.getRating(), item.getUrl(), item.getFormatDate(), item.getName(), item.getProfile_image(), item.getMenu(), item.getCafe_name(), item.getSelection(), item.isIsimage());
+                            ReviewItem a = new ReviewItem(item.getReview(), item.getRating(), item.getUrl(), item.getFormatDate(), item.getName(), item.getProfile_image(), item.getMenu(), item.getCafe_name(), item.getSelection(), item.isIsimage());
                             mItems.add(a);
                             recycleradapter.notifyDataSetChanged();
 
                         } else {
-                            MyReviewItem a = new MyReviewItem(item.getReview(), item.getRating(), item.getFormatDate(), item.getName(), item.getProfile_image(), item.getMenu(), item.getCafe_name(), item.getSelection(), item.isIsimage());
+                            ReviewItem a = new ReviewItem(item.getReview(), item.getRating(), item.getFormatDate(), item.getName(), item.getProfile_image(), item.getMenu(), item.getCafe_name(), item.getSelection(), item.isIsimage());
                             mItems.add(a);
                             recycleradapter.notifyDataSetChanged();
                         }
