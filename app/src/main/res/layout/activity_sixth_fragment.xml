@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ExFragment.SixthFragment">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/sixth_lottie"
+        android:layout_width="300sp"
+        android:layout_height="300sp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="80sp"
+        app:lottie_fileName="money.json" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="40sp"
+        android:layout_marginLeft="30sp"
+        android:text="계산서에 메뉴들을 담아 \n\n계산할 가격을 한 눈에 \n\n볼 수 있습니다."
+        android:textSize="20sp" />
+
+</FrameLayout>

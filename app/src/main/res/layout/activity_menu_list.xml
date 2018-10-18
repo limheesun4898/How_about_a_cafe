@@ -69,16 +69,12 @@
         <Button
             android:id="@+id/cal_btn"
             android:layout_width="match_parent"
-            android:layout_height="50sp"
+            android:layout_height="65sp"
             android:layout_margin="4sp"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/spinner"
-            android:text="계산서"
+            android:background="@drawable/cal_design"
             android:textColor="#000000"
             android:textStyle="bold" />
     </RelativeLayout>
-
-
-
 
 </LinearLayout>

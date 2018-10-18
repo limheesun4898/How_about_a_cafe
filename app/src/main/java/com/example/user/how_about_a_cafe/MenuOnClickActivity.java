@@ -39,6 +39,7 @@ public class MenuOnClickActivity extends AppCompatActivity {
     public static ArrayList<ReviewItem> mItems = new ArrayList<>();
     public static DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String uid = user.getUid();
     private RatingBar ratingBar;
     private TextView rating_ave;
     private String cafe_name;
@@ -497,8 +498,8 @@ public class MenuOnClickActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (user != null) {
-                    Cal_Menu_Item item = new Cal_Menu_Item(menu, ice_cnt,String.valueOf(size_cnt), String.valueOf(total_3), String.valueOf(iPerson_cnt));
-                    FirebaseDatabase.getInstance().getReference().child("user_menu").child(cafe_name).child(menu).setValue(item);
+                    Cal_Menu_Item item = new Cal_Menu_Item(menu, ice_cnt,String.valueOf(size_cnt), String.valueOf(total_3), String.valueOf(iMenu_cnt));
+                    FirebaseDatabase.getInstance().getReference().child("user_menu").child(uid).child(cafe_name).child(menu).setValue(item);
                     finish();
                 }
                 else {

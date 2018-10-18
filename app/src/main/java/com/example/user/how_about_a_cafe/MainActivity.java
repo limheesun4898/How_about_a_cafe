@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -62,6 +63,14 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_naviagator);
         setTitle("카페 어때?");
+
+        SharedPreferences preference = getSharedPreferences("a", MODE_PRIVATE);
+        int firstviewshow = preference.getInt("First", 0);
+
+        if (firstviewshow != 1) {
+            Intent intent = new Intent(MainActivity.this, com.example.user.how_about_a_cafe.ViewPager.class);
+            startActivity(intent);
+        }
 
         try {
             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user", Context.MODE_PRIVATE);

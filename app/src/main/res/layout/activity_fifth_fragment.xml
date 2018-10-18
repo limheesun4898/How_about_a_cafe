@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ExFragment.FifthFragment">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/fifth_lottie"
+        android:layout_width="300sp"
+        android:layout_height="300sp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="80sp"
+        app:lottie_fileName="restless_gift.json" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="40sp"
+        android:layout_marginLeft="30sp"
+        android:text="각 매장의 이벤트 페이지를 \n\n제공하여 매장의 이벤트 현황을 \n\n손 쉽게 볼 수 있습니다."
+        android:textSize="20sp" />
+
+</FrameLayout>

@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:autoSizeTextType="uniform"
+            android:layout_gravity="center"
             android:gravity="center"
             android:text="메뉴"
             android:textSize="14sp" />
@@ -26,6 +27,7 @@
             android:layout_width="30sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:gravity="center"
             android:text="온도"
             android:textSize="16sp" />
@@ -35,6 +37,7 @@
             android:layout_width="15sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:gravity="center"
             android:text="사이즈"
             android:textSize="16sp" />
@@ -44,6 +47,7 @@
             android:layout_width="15sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:gravity="center"
             android:text="개수"
             android:textSize="16sp" />
@@ -54,6 +58,7 @@
             android:layout_width="30sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:gravity="center"
             android:text="가격"
             android:textSize="16sp" />

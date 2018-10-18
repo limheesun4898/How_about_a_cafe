@@ -82,7 +82,8 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".EditActivity" />
         <activity android:name=".Favorite" />
-        <activity android:name=".MenuOnClickActivity"/>
+        <activity android:name=".MenuOnClickActivity" />
+        <activity android:name=".ViewPager" />
     </application>
 
 </manifest>
