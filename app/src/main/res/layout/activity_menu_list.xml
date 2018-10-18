@@ -72,7 +72,7 @@
             android:layout_height="65sp"
             android:layout_margin="4sp"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/cal_design"
+            android:background="#fff"
             android:textColor="#000000"
             android:textStyle="bold" />
     </RelativeLayout>
