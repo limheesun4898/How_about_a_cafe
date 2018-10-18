@@ -53,7 +53,6 @@ import noman.googleplaces.Place;
 import noman.googleplaces.PlaceType;
 import noman.googleplaces.PlacesException;
 import noman.googleplaces.PlacesListener;
-//이거 살리고
 public class Google_map extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
         ,LocationListener, PlacesListener {
@@ -637,17 +636,7 @@ public class Google_map extends AppCompatActivity implements OnMapReadyCallback,
                 previous_marker.addAll(hashSet);
             }
         });
-        mGoogleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-            @Override
-            public void onCameraMove() {
-                CameraPosition cameraPosition = mGoogleMap.getCameraPosition();
-                if(cameraPosition.zoom > 14.0) {
-                    //표시 ㄴㄴ
-                } else {
 
-                }
-            }
-        });
     }
 
     @Override
