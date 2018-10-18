@@ -15,10 +15,10 @@
 
         <ImageButton
             android:id="@+id/backspace"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginRight="20dp"
-            android:background="@drawable/backspace" />
+            android:background="@drawable/ic_arrow_back_black_24dp" />
 
         <TextView
             android:id="@+id/cafe_name_tittle"
@@ -35,16 +35,16 @@
 
             <ImageButton
                 android:id="@+id/favorite_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:background="@drawable/ic_favorite_border_black_24dp"
                 android:scaleType="fitXY" />
 
 
             <ImageButton
                 android:id="@+id/event"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/event" />
