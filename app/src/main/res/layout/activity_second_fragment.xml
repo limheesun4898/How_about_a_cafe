@@ -8,18 +8,18 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/second_lottie"
-        android:layout_width="300sp"
-        android:layout_height="300sp"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
         android:layout_gravity="center"
-        android:layout_marginBottom="80sp"
+        android:layout_marginBottom="80dp"
         app:lottie_fileName="mobile_navigation.json" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="40sp"
-        android:layout_marginLeft="30sp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="30dp"
         android:text="하나하나 찾아보기 \n\n힘든 카페의 메뉴들을 \n\n세부적으로 보여줍니다."
         android:textSize="20sp" />
 
