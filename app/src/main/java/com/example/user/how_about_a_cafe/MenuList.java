@@ -2,26 +2,20 @@ package com.example.user.how_about_a_cafe;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,7 +62,7 @@ public class MenuList extends AppCompatActivity {
         listView = (ExpandableListView) findViewById(R.id.expanded_menu);
         actionButton = findViewById(R.id.favorite_button);
         image = (ImageView) findViewById(R.id.childImage);
-        Button cal_btn = (Button) findViewById(R.id.cal_btn);
+        FloatingActionButton cal_btn = (FloatingActionButton) findViewById(R.id.cal_btn);
 
         event = findViewById(R.id.event);
         backspace = findViewById(R.id.backspace);
