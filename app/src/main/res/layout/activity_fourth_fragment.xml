@@ -8,8 +8,8 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/fourth_lottie"
-        android:layout_width="300sp"
-        android:layout_height="300sp"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
         android:layout_gravity="center"
         android:layout_marginBottom="80sp"
         app:lottie_fileName="location.json" />
