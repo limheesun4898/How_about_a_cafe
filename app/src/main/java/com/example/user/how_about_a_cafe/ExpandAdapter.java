@@ -8,8 +8,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 
 public class ExpandAdapter extends BaseExpandableListAdapter {
@@ -59,8 +57,8 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         childPrice.setText(DataList.get(groupPosition).childPrice.get(childPosition));
         TextView childName = (TextView) convertView.findViewById(R.id.childName);
         childName.setText(DataList.get(groupPosition).child.get(childPosition));
-        ImageView childImage = (ImageView) convertView.findViewById(R.id.childImage);
-        Glide.with(context).load(DataList.get(groupPosition).childImage.get(childPosition)).into(childImage);
+//        ImageView childImage = (ImageView) convertView.findViewById(R.id.childImage);
+//        Glide.with(context).load(DataList.get(groupPosition).childImage.get(childPosition)).into(childImage);
 
         return convertView;
     }

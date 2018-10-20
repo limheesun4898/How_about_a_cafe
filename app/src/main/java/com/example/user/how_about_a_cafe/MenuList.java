@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +37,7 @@ public class MenuList extends AppCompatActivity {
     private int img;
     private TextView cafe_title;
     private ExpandableListView listView;
-    private ImageView image;
+//    private ImageView image;
     private ImageButton actionButton,review_btn,event,backspace;
     private String url;
     private myGroup side;
@@ -61,7 +60,7 @@ public class MenuList extends AppCompatActivity {
         final ArrayList<myGroup> DataList = new ArrayList<>();
         listView = (ExpandableListView) findViewById(R.id.expanded_menu);
         actionButton = findViewById(R.id.favorite_button);
-        image = (ImageView) findViewById(R.id.childImage);
+//        image = (ImageView) findViewById(R.id.childImage);
         FloatingActionButton cal_btn = (FloatingActionButton) findViewById(R.id.cal_btn);
 
         event = findViewById(R.id.event);
