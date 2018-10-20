@@ -1,10 +1,6 @@
 package com.example.user.how_about_a_cafe;
 
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.widget.ImageView;
-
-import com.bumptech.glide.RequestBuilder;
 
 import java.util.ArrayList;
 

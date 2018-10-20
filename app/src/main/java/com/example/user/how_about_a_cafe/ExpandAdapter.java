@@ -37,6 +37,13 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
             convertView = myinf.inflate(this.groupLayout, parent, false);
         }
         TextView groupName = (TextView) convertView.findViewById(R.id.groupName);
+
+        viewHolder.iv_icon = (ImageView)convertView.findViewById(R.id.groupIcon);
+        int id_res = 0;
+        if (groupPosition == 0) id_res = R.drawable.ic_restaurant;
+        if (groupPosition == 1) id_res = R.drawable.ic_local_cafe;
+        viewHolder.iv_icon.setImageResource(id_res);
+
         groupName.setText(DataList.get(groupPosition).groupName);
         viewHolder.iv_image = (ImageView) convertView.findViewById(R.id.hwa_down);
         if (isExpanded) {
@@ -113,5 +120,6 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
 
     class ViewHolder {
         public ImageView iv_image;
+        public ImageView iv_icon;
     }
 }

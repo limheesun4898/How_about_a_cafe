@@ -5,7 +5,7 @@
   android:layout_height="56dp">
 
   <ImageView
-    android:id="@+id/list_img"
+    android:id="@+id/groupIcon"
     android:layout_width="24dp"
     android:layout_height="24dp"
     android:layout_alignParentStart="true"
