@@ -61,12 +61,8 @@
           android:id="@+id/expanded_menu"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:layout_above="@id/cal_btn"
-          android:layout_marginBottom="-56dp"
-          android:childDivider="@drawable/line"
-          android:divider="@drawable/line"
-          android:dividerHeight="1dp"
-          android:groupIndicator="@null"/>
+          android:groupIndicator="@null"
+          android:divider="@null"/>
 
         <android.support.design.widget.FloatingActionButton
           android:id="@+id/cal_btn"

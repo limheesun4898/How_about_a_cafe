@@ -1,24 +1,14 @@
 package com.example.user.how_about_a_cafe;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -52,9 +42,9 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         groupName.setText(DataList.get(groupPosition).groupName);
         viewHolder.iv_image = (ImageView) convertView.findViewById(R.id.hwa_down);
         if (isExpanded) {
-            viewHolder.iv_image.setImageResource(R.drawable.hwa_up);
+            viewHolder.iv_image.setImageResource(R.drawable.ic_arrow_up);
         } else {
-            viewHolder.iv_image.setImageResource(R.drawable.hwa_down);
+            viewHolder.iv_image.setImageResource(R.drawable.ic_arrow_down);
         }
         return convertView;
     }
