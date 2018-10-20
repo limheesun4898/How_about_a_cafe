@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -106,7 +108,7 @@ public class Google_map extends AppCompatActivity implements OnMapReadyCallback,
         mapFragment.getMapAsync(this);
 
         previous_marker = new ArrayList<Marker>();
-        Button button = findViewById(R.id.button);
+        ImageButton button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -654,10 +656,11 @@ public class Google_map extends AppCompatActivity implements OnMapReadyCallback,
         mLongitude = location.longitude;
         LatLng position = new LatLng(mLatitude,mLongitude);
 
+        //반경원 띄우기
         mGoogleMap.addCircle(new CircleOptions()
                 .center(position)
                 .radius(500)
-                .strokeColor(Color.RED)
+                .strokeColor(Color.BLUE)
                 .fillColor(0x220000FF)
                 .strokeWidth(5));
 
