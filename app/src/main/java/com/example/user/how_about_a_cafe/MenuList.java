@@ -37,7 +37,6 @@ public class MenuList extends AppCompatActivity {
     private int img;
     private TextView cafe_title;
     private ExpandableListView listView;
-//    private ImageView image;
     private ImageButton actionButton,review_btn,event,backspace;
     private String url;
     private myGroup side;
@@ -60,7 +59,6 @@ public class MenuList extends AppCompatActivity {
         final ArrayList<myGroup> DataList = new ArrayList<>();
         listView = (ExpandableListView) findViewById(R.id.expanded_menu);
         actionButton = findViewById(R.id.favorite_button);
-//        image = (ImageView) findViewById(R.id.childImage);
         FloatingActionButton cal_btn = (FloatingActionButton) findViewById(R.id.cal_btn);
 
         event = findViewById(R.id.event);
@@ -228,6 +226,7 @@ public class MenuList extends AppCompatActivity {
                 intent1.putExtra("cafe_name", data);
                 intent1.putExtra("imageurl", String.valueOf(DataList.get(i).childImage.get(i1)));
                 intent1.putExtra("category", String.valueOf(i));
+
                 startActivity(intent1);
                 return true;
             }

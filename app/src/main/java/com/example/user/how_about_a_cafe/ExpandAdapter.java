@@ -8,11 +8,11 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class ExpandAdapter extends BaseExpandableListAdapter {
-    //    FirebaseStorage storage = FirebaseStorage.getInstance("gs://how-about-a-cafe.appspot.com");
-//    StorageReference storageRef = storage.getReference();
     private Context context;
     private int groupLayout = 0;
     private int chlidLayout = 0;

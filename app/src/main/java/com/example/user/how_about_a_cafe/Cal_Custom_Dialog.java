@@ -25,7 +25,7 @@ public class Cal_Custom_Dialog {
     public static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     public static DatabaseReference databaseReference = firebaseDatabase.getReference();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private String uid = user.getUid();
+    private String uid;
     private Context context;
     private ListView listView = null;
     private int total = 0;
@@ -54,7 +54,10 @@ public class Cal_Custom_Dialog {
         final LinearLayout vis = (LinearLayout) dlg.findViewById(R.id.gone_layout);
         final TextView non_menu_text = (TextView) dlg.findViewById(R.id.non_menu_text);
 
-        cal_refresh.setImageResource(R.drawable.refresh_24dp);
+        cal_refresh.setImageResource(R.drawable.ic_delete_black_24dp);
+
+        if (user != null)
+            uid = user.getUid();
 
         databaseReference.child("user_menu").child(uid).child(cafe).addValueEventListener(new ValueEventListener() {
             @Override
@@ -64,8 +67,7 @@ public class Cal_Custom_Dialog {
                     vis.setVisibility(View.GONE);
                     non_menu_text.setVisibility(View.VISIBLE);
                     return;
-                }
-                else {
+                } else {
                     vis.setVisibility(View.VISIBLE);
                     non_menu_text.setVisibility(View.GONE);
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -79,10 +81,15 @@ public class Cal_Custom_Dialog {
                         total += Integer.parseInt(String.valueOf(snapshot.child("price").getValue()));
                         cal_total.setText(String.valueOf(total) + "원");
                         Log.d("total", String.valueOf(total));
-                        if (menu_item.getTemper())
-                            cal_item.iTemper = "ICE";
-                        else
-                            cal_item.iTemper = "HOT";
+
+                        if (String.valueOf(snapshot.child("category").getValue()).equals("side")) {
+                            cal_item.iTemper = menu_item.getTemper_();
+                        } else {
+                            if (menu_item.getTemper())
+                                cal_item.iTemper = "ICE";
+                            else
+                                cal_item.iTemper = "HOT";
+                        }
 
                         Log.d("menu", String.valueOf(menu_item.getMenu_name()));
                         oData.add(cal_item);

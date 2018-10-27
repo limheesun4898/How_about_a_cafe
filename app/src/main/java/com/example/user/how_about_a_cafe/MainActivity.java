@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity
 		Nologin = v.findViewById(R.id.Nologin);
 		Yeslogin = v.findViewById(R.id.Yeslogin);
 
+		//액션바 설정
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);

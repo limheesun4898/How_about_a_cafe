@@ -3,6 +3,7 @@ package com.example.user.how_about_a_cafe;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.service.autofill.Dataset;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
@@ -39,7 +41,7 @@ public class MenuOnClickActivity extends AppCompatActivity {
     public static ArrayList<ReviewItem> mItems = new ArrayList<>();
     public static DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private String uid = user.getUid();
+    private String uid;
     private RatingBar ratingBar;
     private TextView rating_ave;
     private String cafe_name;
@@ -61,8 +63,10 @@ public class MenuOnClickActivity extends AppCompatActivity {
     private int SIZECNT = 0;
     private String imageurl;
     private String category;
-    private float average;
+    private float average = 0;
     private int review_cnt;
+    private float sum = 0;
+    private ImageButton back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,10 @@ public class MenuOnClickActivity extends AppCompatActivity {
         null_text = (TextView) findViewById(R.id.list_review_null_text);
         ratingBar = (RatingBar) findViewById(R.id.rating_average);
         rating_ave = (TextView) findViewById(R.id.rating_average_text);
+        back = (ImageButton) findViewById(R.id.backspace);
+
+        if (user != null)
+            uid = user.getUid();
 
         Toolbar mytoolbar = findViewById(R.id.menu_on_click_toolbar);
         setSupportActionBar(mytoolbar);
@@ -99,11 +107,16 @@ public class MenuOnClickActivity extends AppCompatActivity {
                     ReviewItem item = dataSnapshot.getValue(ReviewItem.class);
 
                     if (item.getReview() != null) {
-                        review_cnt += 1;
-                        average += Float.parseFloat(item.getRating()) / review_cnt;
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                            review_cnt += 1;
+                            sum += Float.parseFloat(item.getRating());
+                        }
 
+                        average = sum / review_cnt;
+                        String num = String.format("%.1f", average);
                         ratingBar.setRating(average);
-                        rating_ave.setText(String.valueOf(average));
+                        rating_ave.setText(num);
+
                     }
 
                     if (item.isIsimage()) {
@@ -144,6 +157,14 @@ public class MenuOnClickActivity extends AppCompatActivity {
             calData();
 
         }
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
     }
 
     public void calData() {
@@ -498,11 +519,18 @@ public class MenuOnClickActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (user != null) {
-                    Cal_Menu_Item item = new Cal_Menu_Item(menu, ice_cnt,String.valueOf(size_cnt), String.valueOf(total_3), String.valueOf(iMenu_cnt));
-                    FirebaseDatabase.getInstance().getReference().child("user_menu").child(uid).child(cafe_name).child(menu).setValue(item);
-                    finish();
-                }
-                else {
+                    if (category.equals("0")) {
+                        Cal_Menu_Item item = new Cal_Menu_Item(menu, " ", " ", String.valueOf(total_3), String.valueOf(iMenu_cnt), "side");
+                        FirebaseDatabase.getInstance().getReference().child("user_menu").child(uid).child(cafe_name).child(menu).setValue(item);
+                        finish();
+                    }
+                    else {
+                        Cal_Menu_Item item = new Cal_Menu_Item(menu, ice_cnt, String.valueOf(size_cnt), String.valueOf(total_3), String.valueOf(iMenu_cnt), "drink");
+                        FirebaseDatabase.getInstance().getReference().child("user_menu").child(uid).child(cafe_name).child(menu).setValue(item);
+                        finish();
+                    }
+
+                } else {
                     Toast.makeText(MenuOnClickActivity.this, "로그인 후 이용해주세요", Toast.LENGTH_SHORT).show();
                 }
 
@@ -537,7 +565,7 @@ public class MenuOnClickActivity extends AppCompatActivity {
                     intent.putExtra("menu", menu);
                     startActivity(intent);
                 } else
-                    Toast.makeText(this, "로그인 후 이용해 주세요", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "로그인 후 이용해주세요", Toast.LENGTH_SHORT).show();
 
 
         }

@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="56dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp">
 
-  <ImageView
-    android:id="@+id/groupIcon"
-    android:layout_width="24dp"
-    android:layout_height="24dp"
-    android:layout_alignParentStart="true"
-    android:layout_centerVertical="true"
-    android:layout_marginStart="16dp"
-    android:src="@mipmap/ic_launcher"/>
+    <ImageView
+        android:id="@+id/groupIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:src="@mipmap/ic_launcher" />
 
 
-  <TextView
-    android:id="@+id/groupName"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentStart="true"
-    android:layout_centerVertical="true"
-    android:layout_marginStart="72dp"
-    android:text="test"
-    android:textColor="#1a1919"
-    android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/groupName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="72dp"
+        android:text="test"
+        android:textColor="#1a1919"
+        android:textSize="20sp" />
 
-  <ImageView
-    android:id="@+id/hwa_down"
-    android:layout_width="24dp"
-    android:layout_height="24dp"
-    android:layout_alignParentEnd="true"
-    android:layout_centerVertical="true"
-    android:layout_gravity="end"
-    android:layout_marginEnd="16dp"
-    android:src="@mipmap/ic_launcher"/>
+    <ImageView
+        android:id="@+id/hwa_down"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="end"
+        android:layout_marginEnd="16dp"
+        android:src="@mipmap/ic_launcher" />
 
 </RelativeLayout>

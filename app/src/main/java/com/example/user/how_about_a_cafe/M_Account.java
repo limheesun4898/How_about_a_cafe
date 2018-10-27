@@ -76,7 +76,7 @@ public class M_Account extends AppCompatActivity {
     Uri albumURI;
     String stUid;
     LinearLayout Onuser, Offuser;
-    Button out1,out2;
+    Button out1, out2;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -184,15 +184,8 @@ public class M_Account extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         if (user == null) {
-            Onuser.setVisibility(View.GONE);
-            Offuser.setVisibility(View.VISIBLE);
-            out2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(M_Account.this, Login.class));
-                    finish();
-                }
-            });
+            startActivity(new Intent(M_Account.this, Login.class));
+            finish();
 
         } else {
             out1.setOnClickListener(new View.OnClickListener() {
@@ -230,7 +223,7 @@ public class M_Account extends AppCompatActivity {
 
                     }
                 });
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
 
