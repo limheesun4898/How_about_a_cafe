@@ -61,7 +61,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -80,11 +79,11 @@
         <activity
             android:name=".MyReview"
             android:theme="@style/AppTheme" />
-        <activity android:name=".EditActivity" />
         <activity android:name=".Signup" />
         <activity android:name=".Favorite" />
         <activity android:name=".MenuOnClickActivity" />
         <activity android:name=".ViewPager" />
+        <activity android:name=".EditActivity"></activity>
     </application>
 
 </manifest>

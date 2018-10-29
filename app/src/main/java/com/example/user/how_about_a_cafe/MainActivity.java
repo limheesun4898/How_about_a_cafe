@@ -1,5 +1,6 @@
 package com.example.user.how_about_a_cafe;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,14 +48,18 @@ public class MainActivity extends AppCompatActivity
 	private MyRecyclerViewAdapter adapter;
 	private DatabaseReference myRef;
 	final Context context = this;
-	private String stUid, GstLogin;
+	private String stUid;
 	LinearLayout Nologin, Yeslogin;
+
+	public static Activity _Main_Activity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_naviagator);
 		setTitle("카페 어때?");
+
+		_Main_Activity = MainActivity.this;
 
 		SharedPreferences preference = getSharedPreferences("a", MODE_PRIVATE);
 		int firstviewshow = preference.getInt("First", 0);
@@ -124,8 +129,9 @@ public class MainActivity extends AppCompatActivity
 	public void onStart() {
 		super.onStart();
 		if (user == null) {
-			Yeslogin.setVisibility(View.GONE);
-			Nologin.setVisibility(View.VISIBLE);
+			Intent intent = new Intent(this, Login.class);
+			startActivity(intent);
+			finish();
 		} else {
 			FirebaseDatabase database = FirebaseDatabase.getInstance();
 			DatabaseReference myRef = database.getReference();

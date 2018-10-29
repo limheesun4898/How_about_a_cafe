@@ -3,6 +3,7 @@ package com.example.user.how_about_a_cafe;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -75,9 +76,9 @@ public class M_Account extends AppCompatActivity {
     Uri photoURI;
     Uri albumURI;
     String stUid;
-    LinearLayout Onuser, Offuser;
-    Button out1, out2;
+    Button out1;
     SharedPreferences sharedPreferences;
+    MainActivity MA;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -93,12 +94,11 @@ public class M_Account extends AppCompatActivity {
         Username = findViewById(R.id.Username);
         Useremail = findViewById(R.id.Useremail);
         UserImage = findViewById(R.id.UserImage);
-        Onuser = findViewById(R.id.Onuser);
-        Offuser = findViewById(R.id.Offuser);
         out1 = findViewById(R.id.out1);
-        out2 = findViewById(R.id.out2);
 
         progress = findViewById(R.id.progress);
+        MA = (MainActivity)MainActivity._Main_Activity;
+
     }
 
     public void iv_view(View v) {
@@ -121,10 +121,17 @@ public class M_Account extends AppCompatActivity {
                 dialog.dismiss();
             }
         };
+        DialogInterface.OnClickListener basic = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context, "기본 이미지", Toast.LENGTH_SHORT).show();
+            }
+        };
         new AlertDialog.Builder(context)
                 .setTitle("업로드할 이미지 선택")
                 .setPositiveButton("사진 촬영", cameraListener)
                 .setNegativeButton("앨범 선택", albumListener)
+                .setNeutralButton("기본 이미지",basic)
                 .setNeutralButton("취소", cancelListener)
                 .show();
     }
@@ -185,8 +192,8 @@ public class M_Account extends AppCompatActivity {
         super.onStart();
         if (user == null) {
             startActivity(new Intent(M_Account.this, Login.class));
+            MA.finish();
             finish();
-
         } else {
             out1.setOnClickListener(new View.OnClickListener() {
                 @Override

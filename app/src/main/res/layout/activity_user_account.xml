@@ -6,11 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".M_Account">
-    <LinearLayout
-        android:id="@+id/Onuser"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:orientation="vertical">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="300dp">
@@ -65,23 +61,3 @@
             android:text="logout"
             android:id="@+id/out1"/>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/Offuser"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:text="로그인을 하여주세요."/>
-        <Button
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:text="logout"
-            android:id="@+id/out2"/>
-    </LinearLayout>
-
-</LinearLayout>

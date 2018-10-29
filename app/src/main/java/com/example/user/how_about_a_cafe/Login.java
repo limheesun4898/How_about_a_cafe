@@ -55,9 +55,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
     EditText Login_email, Login_password;
     DatabaseReference myRef;
-
     String name, email, photoUrl;
-    String email_name, email_email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +65,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         findViewById(R.id.GoogleLoginbtn).setOnClickListener(this);
         findViewById(R.id.Signupbtn_Login).setOnClickListener(this);
         findViewById(R.id.LoginBtn_Login).setOnClickListener(this);
-        findViewById(R.id.gusetlogin).setOnClickListener(this);
 
         Login_email = findViewById(R.id.Login_email);
         Login_password = findViewById(R.id.Login_password);
@@ -82,7 +79,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
                     SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("Uid", user.getUid());
@@ -155,7 +151,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
                             name = user.getDisplayName();
                             email = user.getEmail();
-                            photoUrl = user.getPhotoUrl().toString();
+                            photoUrl = "https://firebasestorage.googleapis.com/v0/b/how-about-a-cafe.appspot.com/o/users%2Faccount.png?alt=media&token=187d46ea-019f-487f-97b6-3a2305272630";
                             //DB에 데이터 저장
                             Hashtable<String, String> profile = new Hashtable<String, String>();
                             profile.put("name", name);
@@ -284,11 +280,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 } else {
                     clickSignIn(email, password);
                 }
-                break;
-            case R.id.gusetlogin:
-                Intent intent1 = new Intent(this, MainActivity.class);
-                startActivity(intent1);
-                finish();
                 break;
         }
     }
