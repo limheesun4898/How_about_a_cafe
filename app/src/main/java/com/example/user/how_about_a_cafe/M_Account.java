@@ -99,6 +99,8 @@ public class M_Account extends AppCompatActivity {
         progress = findViewById(R.id.progress);
         MA = (MainActivity)MainActivity._Main_Activity;
 
+        //test
+
     }
 
     public void iv_view(View v) {
