@@ -74,7 +74,6 @@ class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.V
             image = view.findViewById(R.id.recyclerview_image);
             imagetext = view.findViewById(R.id.recyclerview_text);
         }
-
     }
 
 }

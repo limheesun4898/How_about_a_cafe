@@ -78,7 +78,7 @@ public class M_Account extends AppCompatActivity {
     String stUid;
     Button out1;
     SharedPreferences sharedPreferences;
-    MainActivity MA;
+    //MainActivity MA;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -97,7 +97,7 @@ public class M_Account extends AppCompatActivity {
         out1 = findViewById(R.id.out1);
 
         progress = findViewById(R.id.progress);
-        MA = (MainActivity)MainActivity._Main_Activity;
+      //  MA = (MainActivity)MainActivity._Main_Activity;
 
         //test
 
@@ -194,7 +194,7 @@ public class M_Account extends AppCompatActivity {
         super.onStart();
         if (user == null) {
             startActivity(new Intent(M_Account.this, Login.class));
-            MA.finish();
+           // MA.finish();
             finish();
         } else {
             out1.setOnClickListener(new View.OnClickListener() {

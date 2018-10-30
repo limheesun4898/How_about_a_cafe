@@ -61,13 +61,10 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_navigation__drawer"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".M_Account" />
         <activity android:name=".Google_map" />
         <activity android:name=".MenuList" />
@@ -83,7 +80,10 @@
         <activity android:name=".Favorite" />
         <activity android:name=".MenuOnClickActivity" />
         <activity android:name=".ViewPager" />
-        <activity android:name=".EditActivity"></activity>
+        <activity android:name=".EditActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"></activity>
     </application>
 
 </manifest>
