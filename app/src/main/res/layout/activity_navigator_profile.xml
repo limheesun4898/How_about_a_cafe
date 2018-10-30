@@ -51,18 +51,4 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/Nologin"
-        android:visibility="gone"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:text="게스트 로그인입니다."/>
-
-    </LinearLayout>
-
 </LinearLayout>

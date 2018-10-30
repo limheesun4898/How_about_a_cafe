@@ -37,7 +37,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
-	implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+		implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
 	private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
 	private FirebaseUser user = mFirebaseAuth.getCurrentUser();
@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity
 	private DatabaseReference myRef;
 	final Context context = this;
 	private String stUid;
-	LinearLayout Nologin, Yeslogin;
 
 	public static Activity _Main_Activity;
 
@@ -94,15 +93,13 @@ public class MainActivity extends AppCompatActivity
 		View v = navigationView.getHeaderView(0);
 		Uname = v.findViewById(R.id.Username);
 		Uiamge = v.findViewById(R.id.UserImage);
-		Nologin = v.findViewById(R.id.Nologin);
-		Yeslogin = v.findViewById(R.id.Yeslogin);
 
 		//액션바 설정
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-			this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+				this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
 

@@ -74,15 +74,15 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+        setContentView(R.layout.activity_write_review);
 
-        textNum = (TextView) findViewById(R.id.edit_review_textNum);
-        editReview = (EditText) findViewById(R.id.edit_review_edit);
-        ratingBar = (RatingBar) findViewById(R.id.edit_ratingBar);
-        photo_select = (ImageView) findViewById(R.id.edit_review_photo_select);
-        send_btn = (ImageView) findViewById(R.id.edit_review_send);
+        textNum = (TextView) findViewById(R.id.write_review_textNum);
+        editReview = (EditText) findViewById(R.id.write_review_edit);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar1);
+        photo_select = (ImageView) findViewById(R.id.write_review_photo_select);
+        send_btn = (ImageView) findViewById(R.id.write_review_send);
 
-        Toolbar mytoolbar = findViewById(R.id.edit_review_toolbar);
+        Toolbar mytoolbar = findViewById(R.id.write_review_toolbar);
         setSupportActionBar(mytoolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -147,8 +147,6 @@ public class EditActivity extends AppCompatActivity {
                     ReviewItem a = new ReviewItem(editReview.getText().toString(), String.valueOf(rating), String.valueOf(downloadUrl), formatDate, name, profile, menu, cafe_name, String.valueOf(selection), isimage);
                     FirebaseDatabase.getInstance().getReference().child("UserReview").child(uid).child(data).setValue(a);//formatData는 작성한 시간
                     FirebaseDatabase.getInstance().getReference().child("Review").child(cafe_name).child(menu).child(data).setValue(a);
-                    Intent intent = new Intent(EditActivity.this, MyReview.class);
-                    startActivity(intent);
                     finish();
 
                 }
