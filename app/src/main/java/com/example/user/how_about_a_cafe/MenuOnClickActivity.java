@@ -1,5 +1,6 @@
 package com.example.user.how_about_a_cafe;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -196,6 +197,14 @@ public class MenuOnClickActivity extends AppCompatActivity {
             person_minus.setEnabled(false);
         else
             person_minus.setEnabled(true);
+        if (ice_cnt) {
+            ice_btn.setBackgroundColor(getResources().getColor(R.color.colorGray));
+            hot_btn.setBackgroundColor(getResources().getColor(R.color.colorHot));
+        }
+        else {
+            hot_btn.setBackgroundColor(getResources().getColor(R.color.colorGray));
+            ice_btn.setBackgroundColor(getResources().getColor(R.color.colorIce));
+        }
 
         firebaseDatabase.child(cafe_name).addValueEventListener(new ValueEventListener() {
             @Override
@@ -220,31 +229,6 @@ public class MenuOnClickActivity extends AppCompatActivity {
                                 size3.setVisibility(View.GONE);
                             }
 
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                    firebaseDatabase.child(cafe_name).child("사이드 메뉴").child(menu).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.getValue() == null)
-                                return;
-                            else {
-                                String s_price = dataSnapshot.getValue().toString();
-                                menu_price.setText(s_price);
-                                price = Integer.parseInt(s_price);
-                                total = price;
-                                total_2 = price;
-                                total_3 = price;
-                                hot_btn.setVisibility(View.GONE);
-                                ice_btn.setVisibility(View.GONE);
-                                size1.setVisibility(View.GONE);
-                                size2.setVisibility(View.GONE);
-                                size3.setVisibility(View.GONE);
-                            }
                         }
 
                         @Override
@@ -278,13 +262,15 @@ public class MenuOnClickActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() == null) {
                             ice = 0;
+                            ice_btn.setVisibility(View.GONE);
+                            hot_btn.setVisibility(View.GONE);
                         } else
                             ice = Integer.parseInt(dataSnapshot.getValue().toString());
 
-                        if (ice == 0) {
-                            hot_btn.setBackgroundColor(Color.GRAY);
-                            ice_btn.setBackgroundColor(Color.GRAY);
-                        }
+//                        if (ice == 0) {
+//                            hot_btn.setBackgroundColor(Color.GRAY);
+//                            ice_btn.setBackgroundColor(Color.GRAY);
+//                        }
                     }
 
                     @Override
@@ -295,15 +281,20 @@ public class MenuOnClickActivity extends AppCompatActivity {
                 firebaseDatabase.child(cafe_name).child("음료").child("SIZE").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() == null)
+                        if (dataSnapshot.getValue() == null){
                             size = 0;
+                            size1.setVisibility(View.GONE);
+                            size2.setVisibility(View.GONE);
+                            size3.setVisibility(View.GONE);
+
+                        }
                         else
                             size = Integer.parseInt(dataSnapshot.getValue().toString());
-                        if (size == 0) {
-                            size1.setEnabled(false);
-                            size2.setEnabled(false);
-                            size3.setEnabled(false);
-                        }
+//                        if (size == 0) {
+//                            size1.setEnabled(false);
+//                            size2.setEnabled(false);
+//                            size3.setEnabled(false);
+//                        }
 
                     }
 
@@ -341,6 +332,7 @@ public class MenuOnClickActivity extends AppCompatActivity {
         });
 
         hot_btn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
                 hot_btn.setEnabled(false);
@@ -350,6 +342,14 @@ public class MenuOnClickActivity extends AppCompatActivity {
                 total = Integer.parseInt(menu_price.getText().toString());
                 total_2 = Integer.parseInt(menu_price.getText().toString());
                 total_3 = Integer.parseInt(menu_price.getText().toString());
+                if (ice_cnt) {
+                    ice_btn.setBackgroundColor(getResources().getColor(R.color.colorGray));
+                    hot_btn.setBackgroundColor(getResources().getColor(R.color.colorHot));
+                }
+                else {
+                    hot_btn.setBackgroundColor(getResources().getColor(R.color.colorGray));
+                    ice_btn.setBackgroundColor(getResources().getColor(R.color.colorIce));
+                }
             }
         });
 
@@ -363,6 +363,14 @@ public class MenuOnClickActivity extends AppCompatActivity {
                 total = Integer.parseInt(menu_price.getText().toString());
                 total_2 = Integer.parseInt(menu_price.getText().toString());
                 total_3 = Integer.parseInt(menu_price.getText().toString());
+                if (ice_cnt) {
+                    ice_btn.setBackgroundColor(getResources().getColor(R.color.colorGray));
+                    hot_btn.setBackgroundColor(getResources().getColor(R.color.colorHot));
+                }
+                else {
+                    hot_btn.setBackgroundColor(getResources().getColor(R.color.colorGray));
+                    ice_btn.setBackgroundColor(getResources().getColor(R.color.colorIce));
+                }
             }
         });
 
