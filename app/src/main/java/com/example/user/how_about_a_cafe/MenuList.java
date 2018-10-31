@@ -94,7 +94,6 @@ public class MenuList extends AppCompatActivity {
         backspace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MenuList.this, MainActivity.class));
                 finish();
             }
         });
