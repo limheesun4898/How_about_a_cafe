@@ -68,7 +68,7 @@ public class WriteReview extends AppCompatActivity {
 
     long now = System.currentTimeMillis();
     Date date = new Date(now);
-    SimpleDateFormat sdfDate = new SimpleDateFormat("YYYY-MM-dd (HH:mm:ss)");
+    SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd (HH:mm:ss)");
     String formatDate = sdfDate.format(date);
 
     @Override
