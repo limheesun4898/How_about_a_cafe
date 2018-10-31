@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -186,7 +187,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_account) {
             startActivity(new Intent(this, M_Account.class));
         } else if (id == R.id.nav_game) {
-            Toast.makeText(this, "사다리게임", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "사다리 게임 아직 준비 중입니다.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://m.search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=%EC%82%AC%EB%8B%A4%EB%A6%AC%EA%B2%8C%EC%9E%84"));
+            startActivity(intent);
         } else if (id == R.id.nav_favortie) {
             startActivity(new Intent(this, Favorite.class));
         } else if (id == R.id.nav_location) {
