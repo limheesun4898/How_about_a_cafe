@@ -15,7 +15,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="center"
-                android:src="@drawable/account_background"/>
+                android:background="@drawable/account_background"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/UserImage"

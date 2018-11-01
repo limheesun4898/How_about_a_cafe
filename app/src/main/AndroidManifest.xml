@@ -83,7 +83,8 @@
         <activity android:name=".EditActivity" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"></activity>
+            android:label="@string/title_activity_main" />
+        <activity android:name=".login22222"></activity>
     </application>
 
 </manifest>
