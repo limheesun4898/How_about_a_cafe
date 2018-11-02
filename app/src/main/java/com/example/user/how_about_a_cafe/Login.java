@@ -63,12 +63,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         setContentView(R.layout.activity_login);
 
         findViewById(R.id.GoogleLoginbtn).setOnClickListener(this);
-        findViewById(R.id.Signupbtn_Login).setOnClickListener(this);
-        findViewById(R.id.LoginBtn_Login).setOnClickListener(this);
-
-        Login_email = findViewById(R.id.Login_email);
-        Login_password = findViewById(R.id.Login_password);
-
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -180,12 +174,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                             // 프로필 DB 저장
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
                             name = user.getDisplayName();
-
-                            photoUrl = user.getPhotoUrl().toString();
+                            photoUrl = "https://firebasestorage.googleapis.com/v0/b/how-about-a-cafe.appspot.com/o/users%2Faccount.png?alt=media&token=187d46ea-019f-487f-97b6-3a2305272630";
                             //DB에 데이터 저장
                             Hashtable<String, String> profile = new Hashtable<String, String>();
                             profile.put("name", name);
-                            profile.put("email", "");
+                            profile.put("email", "페북 로그인 하였습니다.");
                             profile.put("photo", photoUrl);
                             myRef.child(user.getUid()).setValue(profile);
 
@@ -203,32 +196,9 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
     }
 
-    //이메일 로그인
     @Override
-    public void clickSignIn(String email, String password) {
-        mFirebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (!task.isSuccessful()) {
-                            //로그인 실패
-                            try {
-                                throw task.getException();
-                            } catch (FirebaseAuthInvalidUserException e) {
-                                Toast.makeText(Login.this, "존재하지 않는 email 입니다.", Toast.LENGTH_SHORT).show();
-                            } catch (FirebaseAuthInvalidCredentialsException e) {
-                                Toast.makeText(Login.this, "이메일 형식이 맞지 않습니다.", Toast.LENGTH_SHORT).show();
-                            } catch (FirebaseNetworkException e) {
-                                Toast.makeText(Login.this, "Firebase NetworkException", Toast.LENGTH_SHORT).show();
-                            } catch (Exception e) {
-                            }
-                        } else {
-                            //로그인 성공
-                            startActivity(new Intent(Login.this, MainActivity.class));
-                            finish();
-                        }
-                    }
-                });
+    public void clickSignIn(String email, String Login_password) {
+
     }
 
     //계정 데이터 가져옴
@@ -267,19 +237,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             case R.id.GoogleLoginbtn:
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
-                break;
-            case R.id.Signupbtn_Login:
-                Intent intent = new Intent(this, Signup.class);
-                startActivity(intent);
-                break;
-            case R.id.LoginBtn_Login:
-                String email = Login_email.getText().toString();
-                String password = Login_password.getText().toString();
-                if (email.isEmpty() || password.isEmpty()){
-                    Toast.makeText(this, "빈칸을 채워주세요 :)", Toast.LENGTH_SHORT).show();
-                } else {
-                    clickSignIn(email, password);
-                }
                 break;
         }
     }

@@ -76,7 +76,6 @@
         <activity
             android:name=".MyReview"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Signup" />
         <activity android:name=".Favorite" />
         <activity android:name=".MenuOnClickActivity" />
         <activity android:name=".ViewPager" />
@@ -84,7 +83,6 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" />
-        <activity android:name=".login22222"></activity>
     </application>
 
 </manifest>
