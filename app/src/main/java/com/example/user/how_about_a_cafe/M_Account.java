@@ -97,7 +97,7 @@ public class M_Account extends AppCompatActivity {
         out1 = findViewById(R.id.out1);
 
         progress = findViewById(R.id.progress);
-       MA = (MainActivity)MainActivity._Main_Activity;
+        MA = (MainActivity) MainActivity._Main_Activity;
 
     }
 
@@ -131,7 +131,7 @@ public class M_Account extends AppCompatActivity {
                 .setTitle("업로드할 이미지 선택")
                 .setPositiveButton("사진 촬영", cameraListener)
                 .setNegativeButton("앨범 선택", albumListener)
-                .setNeutralButton("기본 이미지",basic)
+                .setNeutralButton("기본 이미지", basic)
                 .setNeutralButton("취소", cancelListener)
                 .show();
     }

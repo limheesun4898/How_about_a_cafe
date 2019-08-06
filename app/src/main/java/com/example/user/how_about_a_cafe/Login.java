@@ -46,7 +46,7 @@ import com.google.firebase.database.Query;
 import java.util.Hashtable;
 
 public class Login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, onAuthStateChanged {
-    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth mAuth;
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 1000;
     private CallbackManager mCallbackManager;
@@ -63,7 +63,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         setContentView(R.layout.activity_login);
 
         findViewById(R.id.GoogleLoginbtn).setOnClickListener(this);
-        mFirebaseAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("users");
@@ -133,7 +133,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mFirebaseAuth.signInWithCredential(credential)
+        mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -142,7 +142,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         } else {
 
                             //구글 로그인 프로필 DB 저장
-                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                            FirebaseUser user = mAuth.getCurrentUser();
                             name = user.getDisplayName();
                             email = user.getEmail();
                             photoUrl = "https://firebasestorage.googleapis.com/v0/b/how-about-a-cafe.appspot.com/o/users%2Faccount.png?alt=media&token=187d46ea-019f-487f-97b6-3a2305272630";
@@ -164,7 +164,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     //facebook
     private void handleFacebookAccessToken(AccessToken token) {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mFirebaseAuth.signInWithCredential(credential)
+        mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -172,7 +172,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
                         } else {
                             // 프로필 DB 저장
-                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                            FirebaseUser user = mAuth.getCurrentUser();
                             name = user.getDisplayName();
                             photoUrl = "https://firebasestorage.googleapis.com/v0/b/how-about-a-cafe.appspot.com/o/users%2Faccount.png?alt=media&token=187d46ea-019f-487f-97b6-3a2305272630";
                             //DB에 데이터 저장
@@ -218,14 +218,14 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     @Override
     public void onStart() {
         super.onStart();
-        mFirebaseAuth.addAuthStateListener(mAuthLiestener);
+        mAuth.addAuthStateListener(mAuthLiestener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         if (mAuthLiestener != null)
-            mFirebaseAuth.removeAuthStateListener(mAuthLiestener);
+            mAuth.removeAuthStateListener(mAuthLiestener);
         else {
 
         }
